@@ -9,7 +9,7 @@ const translations = {
         'btn-search': 'Шукати проблеми 🔍',
         'loading': '⏳ Обробка...',
         'done': '✅ Готово!',
-        // Калькулятор
+        // Внутрішні кнопки калькулятора
         'btn-vat-tool': 'Розрахунок ПДВ (20%) 💰',
         'btn-cash-tool': 'Касовий звіт (-1%) 📝',
         'action-button': 'Порахувати',
@@ -27,7 +27,7 @@ const translations = {
         'btn-search': 'Search issues 🔍',
         'loading': '⏳ Loading...',
         'done': '✅ Done!',
-        // Calculator
+        // Calculator internal
         'btn-vat-tool': 'VAT Calculation (20%) 💰',
         'btn-cash-tool': 'Cash Report (-1%) 📝',
         'action-button': 'Calculate',
@@ -45,7 +45,7 @@ const translations = {
         'btn-search': 'Fehler suchen 🔍',
         'loading': '⏳ Laden...',
         'done': '✅ Fertig!',
-        // Calculator
+        // Rechner internal
         'btn-vat-tool': 'MwSt. Berechnung (20%) 💰',
         'btn-cash-tool': 'Kassenbericht (-1%) 📝',
         'action-button': 'Berechnen',
@@ -63,7 +63,7 @@ const translations = {
         'btn-search': 'Szukaj problemów 🔍',
         'loading': '⏳ Ładowanie...',
         'done': '✅ Gotowe!',
-        // Calculator
+        // Kalkulator internal
         'btn-vat-tool': 'Obliczanie VAT (20%) 💰',
         'btn-cash-tool': 'Raport kasowy (-1%) 📝',
         'action-button': 'Oblicz',
