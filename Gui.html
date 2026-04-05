@@ -145,11 +145,28 @@
         }
 
         function sendData(text) {
-            tg.sendData(text);
-            tg.close();
+            // 1. Знаходимо заголовок, щоб показати статус
+            const header = document.getElementById('header-title');
+            
+            // 2. Перевіряємо, що саме натиснув юзер, і міняємо текст (фейкова обробка)
+            if (text === 'function1') {
+                header.innerText = "⏳ Рахую показники...";
+                header.style.color = "#e67e22"; // Робимо текст помаранчевим
+            } else if (text === 'function2') {
+                header.innerText = "🔍 Шукаю проблеми...";
+                header.style.color = "#3498db"; // Робимо текст синім
+            }
+
+            // 3. МИ ПРИБРАЛИ tg.sendData(text) і tg.close()
+            // Тепер додаток НЕ закриється.
+            
+            // 4. Через 3 секунди повертаємо стандартний заголовок
+            setTimeout(() => {
+                const currentLang = document.getElementById('btn-ua').innerText.includes('✅') ? 'ua' : 'en';
+                header.innerText = translations[currentLang]['header-title'];
+                header.style.color = "#444";
+            }, 3000);
         }
     </script>
-</body>
-</html>
 </body>
 </html>
