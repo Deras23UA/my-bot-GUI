@@ -21,12 +21,13 @@
             align-items: center;
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
         }
 
         #header-title {
             margin-bottom: 25px;
             font-weight: 600;
-            font-size: 22px;
+            font-size: 24px;
             color: #2c3e50;
             transition: 0.3s;
         }
@@ -44,15 +45,57 @@
             font-weight: 500; cursor: pointer; width: 90%; 
             max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
+            outline: none;
         }
 
         button:active { background-color: #f8f9fa; transform: scale(0.96); }
 
-        /* Кнопка калькулятора - виділимо її кольором */
+        /* Синя кнопка калькулятора */
         #btn-calc-main {
             background-color: #3498db;
             color: white;
             border: none;
+            font-weight: 600;
+        }
+
+        /* Інтерфейс калькулятора */
+        #tool-interface {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 24px;
+            width: 85%;
+            max-width: 320px;
+            margin-top: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+        }
+
+        input {
+            width: 90%;
+            padding: 14px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus { border-color: #3498db; }
+
+        #calc-result {
+            font-size: 18px;
+            color: #27ae60;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            min-height: 54px;
+        }
+
+        #action-button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            width: 100%;
         }
 
         #btn-close { color: #e74c3c; border-color: #faccc0; margin-top: 20px; }
@@ -75,15 +118,24 @@
     </div>
 
     <div id="calc-menu" class="hidden">
-        <button onclick="processFunction('btn-calc-sub', 'calc')">Звичайний калькулятор 🔢</button>
-        <button onclick="processFunction('btn-vat', 'vat')">Розрахунок ПДВ 💰</button>
-        <button onclick="processFunction('btn-cash', 'cash')">Касовий звіт 📝</button>
-        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <div id="calc-tools">
+            <button onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
+            <button onclick="openTool('cash')">Касовий звіт (-1%) 📝</button>
+            <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        </div>
+
+        <div id="tool-interface" class="hidden">
+            <h4 id="tool-name" style="margin-top:0; color:#2c3e50;">Інструмент</h4>
+            <input type="number" id="calc-input" placeholder="0.00" inputmode="decimal">
+            <div id="calc-result">Введіть суму</div>
+            <button id="action-button">Порахувати</button>
+            <button class="back-btn" onclick="closeTool()" style="background:#eee; color:#666; margin-top:10px;">ВІДМІНА</button>
+        </div>
     </div>
 
     <div id="function-menu" class="hidden">
-        <button id="btn-calc" onclick="processFunction('btn-calc', 'function1')">Рахувати показники 📊</button>
-        <button id="btn-search" onclick="processFunction('btn-search', 'function2')">Шукати проблеми 🔍</button>
+        <button id="btn-calc" onclick="processGeneric()">Рахувати показники 📊</button>
+        <button id="btn-search" onclick="processGeneric()">Шукати проблеми 🔍</button>
         <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -101,49 +153,101 @@
         tg.ready();
 
         let currentLang = 'ua';
-
-        // Додай ці нові назви у свій файл languages.js!
-        // А поки вони будуть текстом за замовчуванням.
+        let activeTool = '';
 
         function playSound(id) {
             const sound = document.getElementById(id);
             if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
         }
 
+        // Перемикання між екранами
         function showMenu(menuId) {
             playSound('click-sound');
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('function-menu').classList.add('hidden');
-            document.getElementById('lang-menu').classList.add('hidden');
-            document.getElementById('calc-menu').classList.add('hidden');
+            const menus = ['main-menu', 'function-menu', 'lang-menu', 'calc-menu'];
+            menus.forEach(m => document.getElementById(m).classList.add('hidden'));
+            
+            document.getElementById('calc-tools').classList.remove('hidden');
+            document.getElementById('tool-interface').classList.add('hidden');
             document.getElementById(menuId).classList.remove('hidden');
         }
 
-        function selectLanguage(langCode) {
+        // Відкриття конкретного калькулятора
+        function openTool(tool) {
             playSound('click-sound');
-            currentLang = langCode;
-            if (typeof translations !== 'undefined') {
-                const langData = translations[langCode]; 
-                for (let id in langData) {
-                    const el = document.getElementById(id);
-                    if (el) el.innerText = langData[id];
-                }
+            activeTool = tool;
+            document.getElementById('calc-tools').classList.add('hidden');
+            document.getElementById('tool-interface').classList.remove('hidden');
+            
+            const nameEl = document.getElementById('tool-name');
+            const btn = document.getElementById('action-button');
+            
+            if(tool === 'vat') {
+                nameEl.innerText = "ПДВ 20%";
+                btn.onclick = calculateVAT;
+            } else {
+                nameEl.innerText = "Звіт (-1%)";
+                btn.onclick = calculateCash;
             }
+            
+            document.getElementById('calc-input').value = '';
+            document.getElementById('calc-result').innerText = 'Очікування вводу...';
         }
 
-        function processFunction(btnId, actionName) {
+        // Функція ПДВ
+        function calculateVAT() {
+            const val = parseFloat(document.getElementById('calc-input').value);
+            if (isNaN(val)) return;
+            playSound('success-sound');
+            const vat = val * 0.20;
+            const total = val + vat;
+            document.getElementById('calc-result').innerHTML = `ПДВ (20%): <b>${vat.toFixed(2)}</b><br>Разом: <b>${total.toFixed(2)}</b>`;
+        }
+
+        // Функція Звіту
+        function calculateCash() {
+            const val = parseFloat(document.getElementById('calc-input').value);
+            if (isNaN(val)) return;
+            playSound('success-sound');
+            const commission = val * 0.01;
+            const net = val - commission;
+            document.getElementById('calc-result').innerHTML = `Комісія (1%): <b>${commission.toFixed(2)}</b><br>До каси: <b>${net.toFixed(2)}</b>`;
+        }
+
+        function closeTool() {
             playSound('click-sound');
-            // Тут буде логіка відкриття інструментів
+            document.getElementById('tool-interface').classList.add('hidden');
+            document.getElementById('calc-tools').classList.remove('hidden');
+        }
+
+        // Зміна мови
+        function selectLanguage(langCode) {
+    playSound('click-sound');
+    currentLang = langCode;
+    if (typeof translations !== 'undefined') {
+        const langData = translations[langCode]; 
+        for (let id in langData) {
+            const el = document.getElementById(id);
+            if (el) {
+                // Якщо це поле вводу, змінюємо placeholder, інакше - текст
+                if (el.tagName === 'INPUT') el.placeholder = langData[id];
+                else el.innerText = langData[id];
+            }
+        }
+        // Окремо оновлюємо текст кнопки "Порахувати" та статус
+        document.getElementById('action-button').innerText = langData['calc-button'];
+        document.getElementById('calc-result').innerText = langData['calc-wait'];
+    }
+        }
+        // Стандартна анімація "Завантаження" для інших кнопок
+        function processGeneric() {
+            playSound('click-sound');
             const header = document.getElementById('header-title');
-            header.innerText = (currentLang === 'ua') ? "⏳ Відкриваю..." : "⏳ Opening...";
-            
+            header.innerText = "⏳...";
             setTimeout(() => {
                 playSound('success-sound');
-                header.innerText = (currentLang === 'ua') ? "✅ Готово" : "✅ Ready";
-                setTimeout(() => {
-                    header.innerText = "Helper for BAS";
-                }, 1500);
-            }, 1000);
+                header.innerText = "✅ Done";
+                setTimeout(() => { header.innerText = "Helper for BAS"; }, 1500);
+            }, 800);
         }
     </script>
 </body>
