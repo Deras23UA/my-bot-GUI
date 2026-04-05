@@ -17,17 +17,16 @@
     <h3>Helper for BAS v1.0</h3>
     
     <div id="main-menu">
+        <button onclick="showMenu('function-menu')">Функції</button>
         <button onclick="showMenu('lang-menu')">МОВА 🌍</button>
-        <button onclick="sendData('help')">ДОПОМОГА ❓</button>
         <button onclick="tg.close()">Закрити</button>
     </div>
 
-    <div id="lang-menu" class="hidden">
-        <button onclick="sendData('set_ua')">Українська 🇺🇦</button>
-        <button onclick="sendData('set_en')">English 🇺🇸</button>
+    <div id="function-menu" class="hidden">
+        <button onclick="sendData('function1')">Рахувати фінансові показники</button>
+        <button onclick="sendData('function2')">Шукати проблеми в файлі</button>
         <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
-
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
