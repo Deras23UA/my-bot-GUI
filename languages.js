@@ -13,7 +13,8 @@ const translations = {
         'btn-back-func': 'НАЗАД ⬅️',
         'btn-back-lang': 'НАЗАД ⬅️',
         'loading': '⏳ Обробка...',
-        'done': '✅ Готово!'
+        'done': '✅ Готово!',
+        'btn-calc-main': 'Калькулятор 🧮'
     },
     'en': {
         'header-title': 'Helper for BAS v1.0',
@@ -29,7 +30,8 @@ const translations = {
         'btn-back-func': 'BACK ⬅️',
         'btn-back-lang': 'BACK ⬅️',
         'loading': '⏳ Processing...',
-        'done': '✅ Done!'
+        'done': '✅ Done!',
+        'btn-calc-main': 'Calculator 🧮'
     },
     'de': {
         'header-title': 'Helfer für BAS v1.0',
@@ -45,7 +47,8 @@ const translations = {
         'btn-back-func': 'ZURÜCK ⬅️',
         'btn-back-lang': 'ZURÜCK ⬅️',
         'loading': '⏳ Verarbeitung...',
-        'done': '✅ Fertig!'
+        'done': '✅ Fertig!',
+        'btn-calc-main': 'Rechner 🧮'
     },
     'pl': {
         'header-title': 'Pomocnik dla BAS v1.0',
@@ -61,6 +64,7 @@ const translations = {
         'btn-back-func': 'WSTECZ ⬅️',
         'btn-back-lang': 'WSTECZ ⬅️',
         'loading': '⏳ Przetwarzanie...',
-        'done': '✅ Gotowe!'
+        'done': '✅ Gotowe!',
+        'btn-calc-main': 'Kalkulator 🧮'
     }
 };
