@@ -51,13 +51,32 @@
             box-shadow: 0 10px 20px rgba(243, 156, 18, 0.4); border: none !important;
         }
 
-        /* Мова - Переливання (Червоний-Синій) */
-        #btn-lang-menu:hover {
-            background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
-            background-size: 400% 400% !important; animation: gradientAnimation 3s ease infinite !important;
-            color: white !important; transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(44, 120, 254, 0.5); border: none !important;
-        }
+        /* --- 5. ГОЛОВНА КНОПКА МОВИ (Переливання Червоний-Синій) --- */
+#btn-lang-menu:hover {
+    background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
+    background-size: 400% 400% !important; 
+    animation: gradientAnimation 3s ease infinite !important;
+    color: white !important; 
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(44, 120, 254, 0.5); 
+    border: none !important;
+}
+
+/* --- 6. КНОПКИ ВИБОРУ КОНКРЕТНИХ МОВ (UA, EN, DE, PL) --- */
+#lang-menu button:hover {
+    background: linear-gradient(45deg, #ebf5ff, #ffffff) !important;
+    border-color: #3498db !important;
+    color: #2980b9 !important;
+    transform: translateY(-3px) scale(1.02); /* Легке підняття */
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+}
+
+/* Додамо також анімацію для кнопки "Назад" у меню мов */
+#lang-menu .back-btn:hover {
+    background: #34495e !important;
+    color: white !important;
+    transform: translateY(-3px);
+}
 
         /* Закрити - Червоний */
         #btn-close:hover {
