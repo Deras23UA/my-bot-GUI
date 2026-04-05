@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Deras Helper GUI v1.0</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="languages.js"></script>
     <style>
-        /* --- ТВОЇ СТИЛІ СІТКИ КАЛЬКУЛЯТОРА --- */
+        /* --- СТИЛІ СІТКИ КАЛЬКУЛЯТОРА --- */
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -16,6 +16,7 @@
             max-width: 320px;
         }
 
+        /* Кнопки цифр — круглі */
         .calc-grid button {
             aspect-ratio: 1 / 1;
             display: flex;
@@ -25,10 +26,9 @@
             width: 100% !important;
             font-size: 20px;
             padding: 0 !important;
-            background: #ffffff;
-            border: 1px solid #ddd;
         }
 
+        /* Кнопка "0" на дві колонки */
         .btn-zero {
             grid-column: span 2;
             width: 100% !important;
@@ -37,101 +37,91 @@
             height: 65px;
         }
 
+        /* Кнопка "=" зелена */
         .btn-equal {
             grid-column: span 2;
-            background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+            background: #2ecc71 !important;
             color: white !important;
             border-radius: 30px !important;
             aspect-ratio: auto !important;
             height: 65px;
-            border: none !important;
         }
 
-        /* --- НОВІ "ХАКЕРСЬКІ" ТЕМНІ СТИЛІ --- */
+        /* --- БАЗОВІ СТИЛІ --- */
         body { 
-            background: #0f0f13; /* Темний фон як у профі */
-            color: #ffffff; 
-            text-align: center; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            padding-top: 40px; margin: 0;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
+            background-attachment: fixed; color: #333; text-align: center; 
+            font-family: 'Segoe UI', Roboto, sans-serif; padding-top: 40px; margin: 0;
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        h2 { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.5); margin-bottom: 30px; }
-
-        /* Стильні кнопки меню */
-        .menu-btn { 
-            background: linear-gradient(135deg, #1e1e26, #2a2a35);
-            color: white; border: 1px solid #333; padding: 18px 20px; 
-            margin: 10px 0; border-radius: 18px; font-size: 17px; font-weight: bold; cursor: pointer; 
-            width: 90%; max-width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            outline: none; text-transform: uppercase; letter-spacing: 1px;
+        button { 
+            background-color: white; color: #444; border: 1px solid #ddd; padding: 16px 20px; 
+            margin: 8px 0; border-radius: 18px; font-size: 17px; font-weight: 500; cursor: pointer; 
+            width: 90%; max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            outline: none;
         }
 
-        .menu-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,255,136,0.2);
-            border-color: #00ff88;
+        button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .menu-btn:active { transform: scale(0.95); }
-
-        /* Особливі кольори */
-        #btn-calc-main { border-left: 5px solid #2ecc71; }
-        #btn-func { border-left: 5px solid #f1c40f; }
-        #btn-close { border-left: 5px solid #e74c3c; }
+        /* ГРАДІЄНТИ ДЛЯ КНОПОК */
+        #btn-calc-main:hover, #action-button:hover { background: linear-gradient(45deg, #2ecc71, #27ae60) !important; color: white !important; border: none !important; }
+        #btn-func:hover, #btn-calc:hover, #btn-search:hover { background: linear-gradient(45deg, #f1c40f, #f39c12) !important; color: white !important; border: none !important; }
+        #btn-close:hover { background: linear-gradient(45deg, #e74c3c, #c0392b) !important; color: white !important; border: none !important; }
 
         .card { 
-            background: #1a1a20 !important; padding: 25px 20px; border-radius: 24px; 
+            background: white !important; padding: 25px 20px; border-radius: 24px; 
             width: 85%; max-width: 320px; margin: 20px auto; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; align-items: center;
-            border: 1px solid #333;
         }
 
         input { 
-            width: 90%; padding: 14px; border: 2px solid #333; border-radius: 12px; 
-            font-size: 24px; margin-bottom: 15px; text-align: right; outline: none; 
-            background: #000; color: #00ff88; font-family: 'Courier New', monospace;
+            width: 90%; padding: 14px; border: 2px solid #eee; border-radius: 12px; 
+            font-size: 24px; margin-bottom: 15px; text-align: right; outline: none; background: #f8f9fa;
         }
 
         .hidden { display: none !important; }
-        .back-btn { background: #333 !important; color: #aaa !important; border: none !important; width: 100% !important; border-radius: 12px !important; margin-top: 15px;}
-        .res-box { color: #00ff88; font-weight: bold; }
+        .back-btn { background: #f1f2f6 !important; color: #57606f !important; border: none !important; width: 100% !important; border-radius: 12px !important;}
     </style>
 </head>
 <body>
-    <h2 id="header-title">DERAS HELPER v2.0</h2>
+    <h2 id="header-title">Helper for BAS</h2>
     
     <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
     <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
 
     <div id="main-menu">
-        <button class="menu-btn" id="btn-calc-main" onclick="showMenu('calc-menu')">КАЛЬКУЛЯТОР 🧮</button>
-        <button class="menu-btn" id="btn-func" onclick="showMenu('function-menu')">Функції BAS 🛠️</button>
-        <button class="menu-btn" id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
-        <button class="menu-btn" id="btn-close" onclick="tg.close()">Закрити ❌</button>
+        <button id="btn-calc-main" onclick="showMenu('calc-menu')">КАЛЬКУЛЯТОР 🧮</button>
+        <button id="btn-func" onclick="showMenu('function-menu')">Функції 🛠️</button>
+        <button id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
+        <button id="btn-close" onclick="tg.close()">Закрити ❌</button>
     </div>
 
     <div id="calc-menu" class="hidden">
         <div id="calc-tools">
-            <button class="menu-btn" id="btn-simple-calc" onclick="openSimpleCalc()">Швидкий розрахунок 🔢</button>
-            <button class="menu-btn" id="btn-vat-tool" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
-            <button class="menu-btn" id="btn-acc-tool" onclick="openTool('acc')">Бухгалтерія (ПДВ) 📑</button>
+            <button id="btn-simple-calc" onclick="openSimpleCalc()">Швидкий розрахунок 🔢</button>
+            <button id="btn-vat-tool" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
+            <button id="btn-acc-tool" onclick="openTool('acc')">Бухгалтерія (ПДВ) 📑</button>
             <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
         </div>
 
         <div id="simple-calc-interface" class="hidden card">
             <input type="text" id="simple-input" placeholder="0" readonly>
             <div class="calc-grid">
-                <button onclick="press('C')" style="color:#e74c3c">C</button>
+                <button onclick="press('C')">C</button>
                 <button onclick="press('/')">/</button>
                 <button onclick="press('*')">*</button>
                 <button onclick="press('back')">⌫</button>
+                
                 <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('-')">-</button>
                 <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('+')">+</button>
                 <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('.')">.</button>
+                
                 <button class="btn-zero" onclick="press('0')">0</button>
                 <button class="btn-equal" onclick="runEval()">=</button>
             </div>
@@ -141,31 +131,30 @@
         <div id="tool-interface" class="hidden card">
             <h4 id="tool-name" style="margin:0 0 15px 0;">Інструмент</h4>
             <input type="number" id="calc-input" placeholder="0.00">
-            <div class="res-box" id="result-box" style="padding:15px; background:#000; border-radius:12px; margin-bottom:10px; width:90%;">
+            <div class="res-box" id="result-box" style="padding:15px; background:#f8f9fa; border-radius:12px; margin-bottom:10px; width:90%;">
                 <span id="result-text">Введіть суму</span>
             </div>
-            <button class="menu-btn" id="action-button" style="width:100%">Порахувати</button>
+            <button id="action-button">Порахувати</button>
             <button class="back-btn" onclick="showMenu('calc-menu')">НАЗАД</button>
         </div>
     </div>
 
     <div id="function-menu" class="hidden">
-        <button class="menu-btn" id="btn-calc" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
-        <button class="menu-btn" id="btn-search" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
-        <button class="menu-btn" style="border-left:5px solid #ff4444" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
+        <button id="btn-calc" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
+        <button id="btn-search" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
         <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <div id="lang-menu" class="hidden">
-        <button class="menu-btn" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
-        <button class="menu-btn" onclick="selectLanguage('en')">English 🇺🇸</button>
+        <button onclick="selectLanguage('ua')">Українська 🇺🇦</button>
+        <button onclick="selectLanguage('en')">English 🇺🇸</button>
         <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.headerColor = "#0f0f13";
+        let currentLang = 'ua';
+        let lastRes = "";
 
         function playSound(id) { 
             let s = document.getElementById(id);
@@ -173,15 +162,13 @@
         }
 
         function showMenu(id) {
-            document.querySelectorAll('div[id]').forEach(m => {
-                if(m.id !== 'main-menu' && m.id !== 'calc-menu' && m.id !== 'function-menu' && m.id !== 'lang-menu' && m.id !== 'calc-tools' && m.id !== 'simple-calc-interface' && m.id !== 'tool-interface') return;
-                m.classList.add('hidden');
-            });
+            document.querySelectorAll('div[id]').forEach(m => m.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             if(id === 'calc-menu') document.getElementById('calc-tools').classList.remove('hidden');
             playSound('click-sound');
         }
 
+        // Логіка кнопок калькулятора
         function press(v) {
             let i = document.getElementById('simple-input');
             if(v === 'C') i.value = '';
@@ -198,19 +185,20 @@
             } catch { document.getElementById('simple-input').value = "Помилка"; }
         }
 
-        function openSimpleCalc() { showMenu('simple-calc-interface'); }
+        function openSimpleCalc() {
+            showMenu('simple-calc-interface');
+        }
 
         function openTool(tool) {
             document.getElementById('calc-tools').classList.add('hidden');
             document.getElementById('tool-interface').classList.remove('hidden');
-            document.getElementById('tool-name').innerText = tool === 'vat' ? "ПДВ (20%)" : "Бухгалтерія";
             document.getElementById('action-button').onclick = tool === 'vat' ? calculateVAT : calculateAcc;
         }
 
         function calculateVAT() {
             const v = parseFloat(document.getElementById('calc-input').value);
             if(isNaN(v)) return;
-            document.getElementById('result-text').innerHTML = `ПДВ: ${(v * 0.2).toFixed(2)}`;
+            document.getElementById('result-text').innerHTML = `ПДВ (20%): <b>${(v * 0.2).toFixed(2)}</b>`;
             playSound('success-sound');
         }
 
@@ -218,24 +206,22 @@
             const v = parseFloat(document.getElementById('calc-input').value);
             if(isNaN(v)) return;
             const vat = (v / 6).toFixed(2);
-            document.getElementById('result-text').innerHTML = `ПДВ: ${vat} | Чисто: ${(v - vat).toFixed(2)}`;
+            document.getElementById('result-text').innerHTML = `ПДВ: <b>${vat}</b><br>Чисто: ${(v - vat).toFixed(2)}`;
             playSound('success-sound');
         }
 
-        // ЦЯ ФУНКЦІЯ ВІДПРАВЛЯЄ КОМАНДУ В БОТ (У ТВІЙ USERS.JSON)
+        // ВІДПРАВКА КОМАНДИ АГЕНТУ
         function sendTask(action) {
             playSound('click-sound');
-            // Передаємо дію в бот
             tg.sendData(JSON.stringify({action: action}));
             
-            // Візуальний ефект відправки
-            document.getElementById('header-title').innerText = "📡 ПЕРЕДАЧА ДАНИХ...";
-            document.body.style.opacity = "0.5";
-            
-            setTimeout(() => tg.close(), 800);
+            const h = document.getElementById('header-title');
+            h.innerText = "⏳ Запит надіслано...";
+            setTimeout(() => tg.close(), 1000);
         }
 
         function selectLanguage(l) { 
+            currentLang = l;
             tg.showAlert("Мову змінено на " + l.toUpperCase());
             showMenu('main-menu');
         }
