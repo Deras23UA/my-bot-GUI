@@ -5,66 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* СУЧАСНИЙ ДИЗАЙН: Градієнт та модерні кнопки */
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #ffdfdf 100%);
             background-attachment: fixed;
             color: #333;
             text-align: center; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             padding-top: 30px; 
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            -webkit-tap-highlight-color: transparent; /* Прибирає синій спалах при натисканні на мобілці */
+            -webkit-tap-highlight-color: transparent;
         }
-
-        h3 {
-            margin-bottom: 25px;
-            font-weight: 600;
-            color: #444;
-        }
-
-        /* Кнопки (Сірі, з легким скляним ефектом) */
+        h3 { margin-bottom: 25px; font-weight: 600; color: #444; transition: 0.3s; }
         button { 
             background-color: rgba(255, 255, 255, 0.8);
-            color: #555; 
-            border: 1px solid #ddd; 
-            padding: 16px 20px; 
-            margin: 8px 0; 
-            border-radius: 15px; 
-            font-size: 17px;
-            font-weight: 500;
-            cursor: pointer; 
-            width: 90%; 
-            max-width: 350px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            color: #555; border: 1px solid #ddd; padding: 16px 20px; 
+            margin: 8px 0; border-radius: 15px; font-size: 17px;
+            font-weight: 500; cursor: pointer; width: 90%; 
+            max-width: 350px; box-shadow: 0 4px 6px rgba(0,0,0,0.03);
             transition: all 0.2s ease;
-            outline: none;
         }
-
-        /* Ефект натискання */
-        button:active { 
-            background-color: #f1f1f1; 
-            transform: scale(0.97); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        #btn-close {
-            color: #e74c3c;
-            border-color: #faccc0;
-            margin-top: 20px;
-        }
-
-        .back-btn {
-            background-color: #ff7675;
-            color: white;
-            border: none;
-            margin-top: 20px;
-        }
-
+        button:active { background-color: #f1f1f1; transform: scale(0.97); }
+        #btn-close { color: #e74c3c; border-color: #faccc0; margin-top: 20px; }
+        .back-btn { background-color: #ff7675; color: white; border: none; margin-top: 20px; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -78,8 +44,8 @@
     </div>
 
     <div id="function-menu" class="hidden">
-        <button id="btn-calc" onclick="sendData('function1')">Рахувати показники 📊</button>
-        <button id="btn-search" onclick="sendData('function2')">Шукати проблеми 🔍</button>
+        <button id="btn-calc" onclick="processFunction('btn-calc', 'function1')">Рахувати показники 📊</button>
+        <button id="btn-search" onclick="processFunction('btn-search', 'function2')">Шукати проблеми 🔍</button>
         <button id="btn-back-func" class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -94,6 +60,8 @@
         tg.expand();
         tg.ready();
 
+        let currentLang = 'ua';
+
         const translations = {
             'ua': {
                 'header-title': 'Помічник для BAS v1.0',
@@ -105,7 +73,8 @@
                 'btn-ua': 'Українська 🇺🇦 ✅',
                 'btn-en': 'English 🇺🇸',
                 'btn-back-func': 'НАЗАД ⬅️',
-                'btn-back-lang': 'НАЗАД ⬅️'
+                'btn-back-lang': 'НАЗАД ⬅️',
+                'loading': '⏳ Обробка...'
             },
             'en': {
                 'header-title': 'Helper for BAS v1.0',
@@ -117,55 +86,54 @@
                 'btn-ua': 'Ukrainian 🇺🇦',
                 'btn-en': 'English 🇺🇸 ✅',
                 'btn-back-func': 'BACK ⬅️',
-                'btn-back-lang': 'BACK ⬅️'
+                'btn-back-lang': 'BACK ⬅️',
+                'loading': '⏳ Processing...'
             }
         };
 
         function showMenu(menuId) {
-            // Приховуємо всі меню
             document.getElementById('main-menu').classList.add('hidden');
             document.getElementById('function-menu').classList.add('hidden');
             document.getElementById('lang-menu').classList.add('hidden');
-            
-            // Показуємо потрібне
             document.getElementById(menuId).classList.remove('hidden');
         }
 
         function selectLanguage(langCode) {
+            currentLang = langCode;
             const langData = translations[langCode];
-            // Миттєве оновлення всіх текстів
             for (let id in langData) {
                 const el = document.getElementById(id);
-                if (el) {
-                    el.innerText = langData[id];
-                }
+                if (el) el.innerText = langData[id];
             }
-            // НЕ використовуємо tg.sendData, щоб вікно не закривалося
-            console.log("Мова змінена на: " + langCode);
         }
 
-        function sendData(text) {
-            // 1. Знаходимо заголовок, щоб показати статус
-            const header = document.getElementById('header-title');
+        // --- НОВА ФУНКЦІЯ ОБРОБКИ (БЕЗ ВИЛЬОТУ) ---
+        function processFunction(btnId, actionName) {
+            const btn = document.getElementById(btnId);
+            const originalText = btn.innerText;
             
-            // 2. Перевіряємо, що саме натиснув юзер, і міняємо текст (фейкова обробка)
-            if (text === 'function1') {
-                header.innerText = "⏳ Рахую показники...";
-                header.style.color = "#e67e22"; // Робимо текст помаранчевим
-            } else if (text === 'function2') {
-                header.innerText = "🔍 Шукаю проблеми...";
-                header.style.color = "#3498db"; // Робимо текст синім
-            }
+            // 1. Показуємо статус завантаження на кнопці
+            btn.innerText = translations[currentLang]['loading'];
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
 
-            // 3. МИ ПРИБРАЛИ tg.sendData(text) і tg.close()
-            // Тепер додаток НЕ закриється.
-            
-            // 4. Через 3 секунди повертаємо стандартний заголовок
+            // 2. Імітуємо роботу (наприклад, 1.5 секунди)
             setTimeout(() => {
-                const currentLang = document.getElementById('btn-ua').innerText.includes('✅') ? 'ua' : 'en';
-                header.innerText = translations[currentLang]['header-title'];
-                header.style.color = "#444";
-            }, 3000);
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+                btn.disabled = false;
+                
+                // Можна змінити заголовок на короткий час
+                const header = document.getElementById('header-title');
+                header.innerText = (currentLang === 'ua') ? "✅ Готово!" : "✅ Done!";
+                header.style.color = "#27ae60";
+
+                setTimeout(() => {
+                    header.innerText = translations[currentLang]['header-title'];
+                    header.style.color = "#444";
+                }, 2000);
+
+            }, 1500);
         }
     </script>
 </body>
