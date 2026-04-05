@@ -9,89 +9,82 @@
     
     <style>
         body { 
-            background: linear-gradient(135deg, #ffffff 0%, #ffdfdf 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
             background-attachment: fixed;
             color: #333;
             text-align: center; 
             font-family: 'Segoe UI', Roboto, sans-serif;
-            padding-top: 80px; /* Місце для кнопок зверху */
+            padding-top: 40px; 
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            position: relative;
         }
 
-        /* Твій підпис знизу зліва (як у профі) */
-        h3 { 
-            position: fixed;      
-            left: 15px;           
-            bottom: 10px;         
-            margin: 0;
-            font-weight: 500;
-            font-size: 11px;      
-            color: rgba(0, 0, 0, 0.2); /* Дуже світлий колір */
-            pointer-events: none; 
-            z-index: 999;
+        #header-title {
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 22px;
+            color: #2c3e50;
             transition: 0.3s;
         }
 
-        /* Кнопки */
+        .version-tag { 
+            position: fixed; left: 15px; bottom: 10px; margin: 0;
+            font-weight: 500; font-size: 10px; color: rgba(0, 0, 0, 0.2);
+            pointer-events: none; z-index: 999;
+        }
+
         button { 
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #555; 
-            border: 1px solid #ddd; 
-            padding: 16px 20px; 
-            margin: 8px 0; 
-            border-radius: 15px; 
-            font-size: 17px;
-            font-weight: 500;
-            cursor: pointer; 
-            width: 90%; 
-            max-width: 350px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            background-color: white;
+            color: #444; border: 1px solid #ddd; padding: 16px 20px; 
+            margin: 8px 0; border-radius: 16px; font-size: 17px;
+            font-weight: 500; cursor: pointer; width: 90%; 
+            max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
 
-        button:active { 
-            background-color: #f1f1f1; 
-            transform: scale(0.97); 
+        button:active { background-color: #f8f9fa; transform: scale(0.96); }
+
+        /* Кнопка калькулятора - виділимо її кольором */
+        #btn-calc-main {
+            background-color: #3498db;
+            color: white;
+            border: none;
         }
 
-        #btn-close { 
-            color: #e74c3c; 
-            border-color: #faccc0; 
-            margin-top: 20px; 
-        }
-
-        .back-btn { 
-            background-color: #ff7675; 
-            color: white; 
-            border: none; 
-            margin-top: 20px; 
-        }
-
+        #btn-close { color: #e74c3c; border-color: #faccc0; margin-top: 20px; }
+        .back-btn { background-color: #95a5a6; color: white; border: none; margin-top: 20px; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <h3 id="header-title">Helper for BAS v1.0</h3>
+    <h2 id="header-title">Helper for BAS</h2>
+    <div class="version-tag">v1.1</div>
     
     <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
     <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
 
     <div id="main-menu">
+        <button id="btn-calc-main" onclick="showMenu('calc-menu')">КАЛЬКУЛЯТОР 🧮</button>
         <button id="btn-func" onclick="showMenu('function-menu')">Функції 🛠️</button>
         <button id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
         <button id="btn-close" onclick="tg.close()">Закрити ❌</button>
     </div>
 
+    <div id="calc-menu" class="hidden">
+        <button onclick="processFunction('btn-calc-sub', 'calc')">Звичайний калькулятор 🔢</button>
+        <button onclick="processFunction('btn-vat', 'vat')">Розрахунок ПДВ 💰</button>
+        <button onclick="processFunction('btn-cash', 'cash')">Касовий звіт 📝</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
     <div id="function-menu" class="hidden">
         <button id="btn-calc" onclick="processFunction('btn-calc', 'function1')">Рахувати показники 📊</button>
         <button id="btn-search" onclick="processFunction('btn-search', 'function2')">Шукати проблеми 🔍</button>
-        <button id="btn-back-func" class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <div id="lang-menu" class="hidden">
@@ -99,7 +92,7 @@
         <button id="btn-en" onclick="selectLanguage('en')">English 🇺🇸</button>
         <button id="btn-de" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
         <button id="btn-pl" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
-        <button id="btn-back-lang" class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <script>
@@ -109,12 +102,12 @@
 
         let currentLang = 'ua';
 
+        // Додай ці нові назви у свій файл languages.js!
+        // А поки вони будуть текстом за замовчуванням.
+
         function playSound(id) {
             const sound = document.getElementById(id);
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log("Звук заблоковано браузером до першого кліку"));
-            }
+            if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
         }
 
         function showMenu(menuId) {
@@ -122,44 +115,35 @@
             document.getElementById('main-menu').classList.add('hidden');
             document.getElementById('function-menu').classList.add('hidden');
             document.getElementById('lang-menu').classList.add('hidden');
+            document.getElementById('calc-menu').classList.add('hidden');
             document.getElementById(menuId).classList.remove('hidden');
         }
 
         function selectLanguage(langCode) {
             playSound('click-sound');
             currentLang = langCode;
-            const langData = translations[langCode]; // Бере дані з languages.js
-            for (let id in langData) {
-                const el = document.getElementById(id);
-                if (el) el.innerText = langData[id];
+            if (typeof translations !== 'undefined') {
+                const langData = translations[langCode]; 
+                for (let id in langData) {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = langData[id];
+                }
             }
         }
 
         function processFunction(btnId, actionName) {
             playSound('click-sound');
-            const btn = document.getElementById(btnId);
-            const originalText = btn.innerText;
+            // Тут буде логіка відкриття інструментів
+            const header = document.getElementById('header-title');
+            header.innerText = (currentLang === 'ua') ? "⏳ Відкриваю..." : "⏳ Opening...";
             
-            btn.innerText = translations[currentLang]['loading'];
-            btn.style.opacity = "0.7";
-            btn.disabled = true;
-
             setTimeout(() => {
                 playSound('success-sound');
-                btn.innerText = originalText;
-                btn.style.opacity = "1";
-                btn.disabled = false;
-                
-                const header = document.getElementById('header-title');
-                header.innerText = translations[currentLang]['done'];
-                header.style.color = "#27ae60";
-
+                header.innerText = (currentLang === 'ua') ? "✅ Готово" : "✅ Ready";
                 setTimeout(() => {
-                    header.innerText = translations[currentLang]['header-title'];
-                    header.style.color = "rgba(0,0,0,0.2)";
-                }, 2000);
-
-            }, 1500);
+                    header.innerText = "Helper for BAS";
+                }, 1500);
+            }, 1000);
         }
     </script>
 </body>
