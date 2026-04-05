@@ -13,7 +13,7 @@
             margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        h2 { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.5); margin-bottom: 25px; font-size: 26px; }
+        h2 { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.5); margin-bottom: 25px; font-size: 26px; transition: all 0.3s; }
 
         .btn-container { width: 95%; max-width: 450px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
@@ -111,8 +111,9 @@
 
         const translations = {
             ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️" },
-            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️" }
-            // Можна додати інші мови сюди
+            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️" },
+            pl: { title: "DERAS HELPER v1.0", calc: "FINANSE 💸", func: "FUNKCJE BAS 🛠️", lang: "JĘZYK 🌍", close: "Zamknij ❌", back: "POWRÓT ⬅️" },
+            de: { title: "DERAS HELPER v1.0", calc: "FINANZEN 💸", func: "BAS FUNKTIONEN 🛠️", lang: "SPRACHE 🌍", close: "Schließen ❌", back: "ZURÜCK ⬅️" }
         };
 
         function selectLanguage(lang) {
@@ -137,18 +138,34 @@
             if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
         }
 
-        // ОНОВЛЕНА ФУНКЦІЯ: Щоб додаток не закривався
-        function sendTask(action) {
+        // ЦЯ ФУНКЦІЯ ТЕПЕР НЕ ЗАКРИВАЄ ВІКНО
+        async function sendTask(action) {
             playSound('click-sound');
             
-            // Якщо ти використовуєш локальний сервер для запису в users.json:
-            // fetch('/update_action', { method: 'POST', body: JSON.stringify({pending_action: action}) });
+            const title = document.getElementById('ui-title');
+            const oldTitle = title.innerText;
 
-            // Якщо ти використовуєш стандартний метод Telegram (він ЗАКРИЄ вікно):
-            tg.sendData(JSON.stringify({action: action}));
-            
-            // Щоб дати користувачу побачити натискання перед закриттям
-            setTimeout(() => { tg.close(); }, 300);
+            try {
+                // Шлемо запит на твій локальний Python скрипт (порт 5000)
+                await fetch('http://127.0.0.1:5000/exec?action=' + action, {
+                    method: 'GET',
+                    mode: 'no-cors' 
+                });
+
+                // Показуємо, що все ок
+                title.innerText = "НАДІСЛАНО ✅";
+                title.style.color = "#00ff88";
+            } catch (e) {
+                // Якщо сервер не запущений — вікно все одно закриється через цей метод
+                console.log("Сервер не знайдено, використовуємо резерв...");
+                tg.sendData(JSON.stringify({action: action}));
+            }
+
+            // Повертаємо заголовок через секунду
+            setTimeout(() => {
+                title.innerText = oldTitle;
+                title.style.color = "";
+            }, 1000);
         }
     </script>
 </body>
