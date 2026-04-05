@@ -6,109 +6,133 @@
     <title>Deras Helper GUI v1.0</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* --- СТИЛІ СІТКИ КАЛЬКУЛЯТОРА --- */
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 15px;
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .calc-grid button {
-            aspect-ratio: 1 / 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50% !important;
-            width: 100% !important;
-            font-size: 20px;
-            padding: 0 !important;
-            background: #ffffff;
-            border: 1px solid #ddd;
-            color: #000;
-        }
-
-        .btn-zero {
-            grid-column: span 2;
-            width: 100% !important;
-            border-radius: 30px !important;
-            aspect-ratio: auto !important;
-            height: 65px;
-        }
-
-        .btn-equal {
-            grid-column: span 2;
-            background: linear-gradient(135deg, #00ff88, #008f4c) !important;
-            color: white !important;
-            border-radius: 30px !important;
-            aspect-ratio: auto !important;
-            height: 65px;
-            border: none !important;
-        }
-
-        /* --- "ХАКЕРСЬКІ" ТЕМНІ СТИЛІ --- */
+        /* --- ТЕМНІ СТИЛІ ТА ПОВНОРОЗМІРНІ КНОПКИ --- */
         body { 
             background: #0f0f13; 
             color: #ffffff; 
             text-align: center; 
             font-family: 'Segoe UI', Roboto, sans-serif; 
-            padding-top: 40px; margin: 0;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            padding-top: 30px; 
+            margin: 0;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+            width: 100%;
         }
 
-        h2 { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.5); margin-bottom: 30px; }
+        h2 { 
+            color: #00ff88; 
+            text-shadow: 0 0 10px rgba(0,255,136,0.5); 
+            margin-bottom: 25px; 
+            font-size: 26px;
+        }
 
-        /* Стильні кнопки меню */
+        /* Контейнер для кнопок, щоб вони були широкими */
+        .btn-container {
+            width: 95%;
+            max-width: 450px; /* Обмежуємо лише для дуже великих екранів */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
         .menu-btn { 
             background: linear-gradient(135deg, #1e1e26, #2a2a35);
-            color: white; border: 1px solid #333; padding: 18px 20px; 
-            margin: 10px 0; border-radius: 18px; font-size: 17px; font-weight: bold; cursor: pointer; 
-            width: 90%; max-width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            outline: none; text-transform: uppercase; letter-spacing: 1px;
-            display: flex; justify-content: center; align-items: center;
+            color: white; 
+            border: 1px solid #333; 
+            padding: 22px 20px; /* Збільшений відступ для масивності */
+            border-radius: 18px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; /* Тепер вони на всю ширину контейнера */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            outline: none; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
         }
 
         .menu-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,255,136,0.2);
+            transform: translateY(-3px);
             border-color: #00ff88;
+            box-shadow: 0 6px 20px rgba(0,255,136,0.15);
         }
 
-        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn:active { transform: scale(0.98); }
 
-        /* Стиль для кнопок НАЗАД */
+        /* Кольорові акценти */
+        #btn-calc-main { border-left: 6px solid #2ecc71; }
+        #btn-func { border-left: 6px solid #f1c40f; }
+        #btn-close { border-left: 6px solid #e74c3c; }
+
+        /* Стиль кнопки НАЗАД - тепер теж велика */
         .back-btn-style {
-            border-left: 5px solid #555 !important;
-            margin-top: 20px !important;
-            background: linear-gradient(135deg, #2a2a35, #1e1e26) !important;
-            color: #aaa !important;
-            font-size: 14px !important;
+            background: #24272e !important;
+            border: 1px solid #40444b !important;
+            color: #8e9297 !important;
+            margin-top: 15px !important;
+            font-size: 15px !important;
+            padding: 15px !important;
         }
 
-        /* Особливі кольори */
-        #btn-calc-main { border-left: 5px solid #2ecc71; }
-        #btn-func { border-left: 5px solid #f1c40f; }
-        #btn-close { border-left: 5px solid #e74c3c; }
-
+        /* --- КАЛЬКУЛЯТОР --- */
         .card { 
-            background: #1a1a20 !important; padding: 25px 20px; border-radius: 24px; 
-            width: 85%; max-width: 320px; margin: 20px auto; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: flex; flex-direction: column; align-items: center;
+            background: #1a1a20; 
+            padding: 20px; 
+            border-radius: 24px; 
+            width: 90%; 
+            max-width: 350px; 
+            margin: 10px auto; 
             border: 1px solid #333;
         }
 
         input { 
-            width: 90%; padding: 14px; border: 2px solid #333; border-radius: 12px; 
-            font-size: 24px; margin-bottom: 15px; text-align: right; outline: none; 
-            background: #000; color: #00ff88; font-family: 'Courier New', monospace;
+            width: 100%; 
+            padding: 15px; 
+            border: 2px solid #333; 
+            border-radius: 15px; 
+            font-size: 28px; 
+            margin-bottom: 15px; 
+            text-align: right; 
+            background: #000; 
+            color: #00ff88; 
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .calc-grid button {
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            border: none;
+            background: #2a2a35;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-equal {
+            grid-column: span 2;
+            background: #00ff88 !important;
+            color: #000 !important;
+            border-radius: 30px !important;
+            aspect-ratio: auto !important;
         }
 
         .hidden { display: none !important; }
-        .res-box { color: #00ff88; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -124,49 +148,39 @@
         <button class="menu-btn" id="btn-close" onclick="tg.close()">Закрити ❌</button>
     </div>
 
-    <div id="calc-menu" class="hidden">
-        <div id="calc-tools">
-            <button class="menu-btn" onclick="openSimpleCalc()">Швидкий розрахунок 🔢</button>
-            <button class="menu-btn" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
-            <button class="menu-btn" onclick="openTool('acc')">Бухгалтерія (ПДВ) 📑</button>
-            <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
-        </div>
+    <div id="calc-menu" class="hidden btn-container">
+        <button class="menu-btn" onclick="openSimpleCalc()">Швидкий розрахунок 🔢</button>
+        <button class="menu-btn" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
+        <button class="menu-btn" onclick="openTool('acc')">Бухгалтерія (ПДВ) 📑</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
 
-        <div id="simple-calc-interface" class="hidden card">
+    <div id="simple-calc-interface" class="hidden">
+        <div class="card">
             <input type="text" id="simple-input" placeholder="0" readonly>
             <div class="calc-grid">
-                <button onclick="press('C')" style="color:#e74c3c">C</button>
+                <button onclick="press('C')" style="color:#ff4444">C</button>
                 <button onclick="press('/')">/</button>
                 <button onclick="press('*')">*</button>
                 <button onclick="press('back')">⌫</button>
                 <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('-')">-</button>
                 <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('+')">+</button>
                 <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('.')">.</button>
-                <button class="btn-zero" onclick="press('0')">0</button>
+                <button style="grid-column: span 2; border-radius:30px;" onclick="press('0')">0</button>
                 <button class="btn-equal" onclick="runEval()">=</button>
             </div>
             <button class="menu-btn back-btn-style" onclick="showMenu('calc-menu')">НАЗАД ⬅️</button>
         </div>
-
-        <div id="tool-interface" class="hidden card">
-            <h4 id="tool-name" style="margin:0 0 15px 0; color:#00ff88;">Інструмент</h4>
-            <input type="number" id="calc-input" placeholder="0.00">
-            <div class="res-box" id="result-box" style="padding:15px; background:#000; border-radius:12px; margin-bottom:10px; width:90%;">
-                <span id="result-text">Введіть суму</span>
-            </div>
-            <button class="menu-btn" id="action-button" style="width:100%; border-left:none; background:#00ff88; color:#000;">Порахувати</button>
-            <button class="menu-btn back-btn-style" onclick="showMenu('calc-menu')">НАЗАД ⬅️</button>
-        </div>
     </div>
 
-    <div id="function-menu" class="hidden">
+    <div id="function-menu" class="hidden btn-container">
         <button class="menu-btn" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
         <button class="menu-btn" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
-        <button class="menu-btn" style="border-left:5px solid #ff4444" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
+        <button class="menu-btn" style="border-left:6px solid #ff4444" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
         <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
-    <div id="lang-menu" class="hidden">
+    <div id="lang-menu" class="hidden btn-container">
         <button class="menu-btn" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
         <button class="menu-btn" onclick="selectLanguage('en')">English 🇺🇸</button>
         <button class="menu-btn" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
@@ -185,20 +199,9 @@
         }
 
         function showMenu(id) {
-            // Ховаємо абсолютно всі контейнери
-            const menus = ['main-menu', 'calc-menu', 'function-menu', 'lang-menu', 'calc-tools', 'simple-calc-interface', 'tool-interface'];
-            menus.forEach(mId => {
-                const el = document.getElementById(mId);
-                if(el) el.classList.add('hidden');
-            });
-
-            // Показуємо потрібний
+            document.querySelectorAll('body > div').forEach(div => div.classList.add('hidden'));
             const target = document.getElementById(id);
             if(target) target.classList.remove('hidden');
-
-            // Якщо йдемо в меню калькуляторів, показуємо вибір інструментів
-            if(id === 'calc-menu') document.getElementById('calc-tools').classList.remove('hidden');
-            
             playSound('click-sound');
         }
 
@@ -220,33 +223,10 @@
 
         function openSimpleCalc() { showMenu('simple-calc-interface'); }
 
-        function openTool(tool) {
-            document.getElementById('calc-tools').classList.add('hidden');
-            document.getElementById('tool-interface').classList.remove('hidden');
-            document.getElementById('tool-name').innerText = tool === 'vat' ? "ПДВ (20%)" : "Бухгалтерія";
-            document.getElementById('action-button').onclick = tool === 'vat' ? calculateVAT : calculateAcc;
-        }
-
-        function calculateVAT() {
-            const v = parseFloat(document.getElementById('calc-input').value);
-            if(isNaN(v)) return;
-            document.getElementById('result-text').innerHTML = `ПДВ: ${(v * 0.2).toFixed(2)}`;
-            playSound('success-sound');
-        }
-
-        function calculateAcc() {
-            const v = parseFloat(document.getElementById('calc-input').value);
-            if(isNaN(v)) return;
-            const vat = (v / 6).toFixed(2);
-            document.getElementById('result-text').innerHTML = `ПДВ: ${vat} | Чисто: ${(v - vat).toFixed(2)}`;
-            playSound('success-sound');
-        }
-
         function sendTask(action) {
             playSound('click-sound');
             tg.sendData(JSON.stringify({action: action}));
-            document.getElementById('header-title').innerText = "📡 ПЕРЕДАЧА ДАНИХ...";
-            document.body.style.opacity = "0.5";
+            document.getElementById('header-title').innerText = "📡 ПЕРЕДАЧА...";
             setTimeout(() => tg.close(), 800);
         }
 
