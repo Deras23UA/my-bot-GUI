@@ -1,70 +1,248 @@
-const translations = {
-    'ua': {
-        'header-title': 'Помічник для BAS v1.0',
-        'btn-func': 'Функції 🛠️',
-        'btn-lang-menu': 'МОВА 🌍',
-        'btn-close': 'Закрити ❌',
-        'btn-calc': 'Рахувати показники 📊',
-        'btn-search': 'Шукати проблеми 🔍',
-        'btn-ua': 'Українська 🇺🇦 ✅',
-        'btn-en': 'English 🇺🇸',
-                'btn-de': 'Deutsch 🇩🇪',
-                'btn-pl': 'Polski 🇵🇱',
-        'btn-back-func': 'НАЗАД ⬅️',
-        'btn-back-lang': 'НАЗАД ⬅️',
-        'loading': '⏳ Обробка...',
-        'done': '✅ Готово!',
-        'btn-calc-main': 'Калькулятор 🧮'
-    },
-    'en': {
-        'header-title': 'Helper for BAS v1.0',
-        'btn-func': 'Functions 🛠️',
-        'btn-lang-menu': 'LANGUAGE 🌍',
-        'btn-close': 'Close ❌',
-        'btn-calc': 'Calculate metrics 📊',
-        'btn-search': 'Search problems 🔍',
-        'btn-ua': 'Ukrainian 🇺🇦',
-        'btn-en': 'English 🇺🇸 ✅',
-                'btn-de': 'German 🇩🇪',
-                'btn-pl': 'Polish 🇵🇱',
-        'btn-back-func': 'BACK ⬅️',
-        'btn-back-lang': 'BACK ⬅️',
-        'loading': '⏳ Processing...',
-        'done': '✅ Done!',
-        'btn-calc-main': 'Calculator 🧮'
-    },
-    'de': {
-        'header-title': 'Helfer für BAS v1.0',
-        'btn-func': 'Funktionen 🛠️',
-        'btn-lang-menu': 'SPRACHE 🌍',
-        'btn-close': 'Schließen ❌',
-        'btn-calc': 'Metriken berechnen 📊',
-        'btn-search': 'Probleme suchen 🔍',
-        'btn-ua': 'Ukrainisch 🇺🇦',
-        'btn-en': 'Englisch 🇺🇸',
-        'btn-de': 'Deutsch 🇩🇪 ✅',
-                'btn-pl': 'Polnisch 🇵🇱',
-        'btn-back-func': 'ZURÜCK ⬅️',
-        'btn-back-lang': 'ZURÜCK ⬅️',
-        'loading': '⏳ Verarbeitung...',
-        'done': '✅ Fertig!',
-        'btn-calc-main': 'Rechner 🧮'
-    },
-    'pl': {
-        'header-title': 'Pomocnik dla BAS v1.0',
-        'btn-func': 'Funkcje 🛠️',
-        'btn-lang-menu': 'JĘZYK 🌍',
-        'btn-close': 'Zamknij ❌',
-        'btn-calc': 'Oblicz wskaźniki 📊',
-        'btn-search': 'Szukaj problemów 🔍',
-        'btn-ua': 'Ukraiński 🇺🇦',
-        'btn-en': 'Angielski 🇺🇸',
-        'btn-de': 'Niemiecki 🇩🇪',
-        'btn-pl': 'Polski 🇵🇱 ✅',
-        'btn-back-func': 'WSTECZ ⬅️',
-        'btn-back-lang': 'WSTECZ ⬅️',
-        'loading': '⏳ Przetwarzanie...',
-        'done': '✅ Gotowe!',
-        'btn-calc-main': 'Kalkulator 🧮'
-    }
-};
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="languages.js"></script>
+    
+    <style>
+        body { 
+            background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
+            background-attachment: fixed;
+            color: #333;
+            text-align: center; 
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            padding-top: 40px; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+        }
+
+        #header-title {
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 24px;
+            color: #2c3e50;
+            transition: 0.3s;
+        }
+
+        .version-tag { 
+            position: fixed; left: 15px; bottom: 10px; margin: 0;
+            font-weight: 500; font-size: 10px; color: rgba(0, 0, 0, 0.2);
+            pointer-events: none; z-index: 999;
+        }
+
+        button { 
+            background-color: white;
+            color: #444; border: 1px solid #ddd; padding: 16px 20px; 
+            margin: 8px 0; border-radius: 16px; font-size: 17px;
+            font-weight: 500; cursor: pointer; width: 90%; 
+            max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        button:active { background-color: #f8f9fa; transform: scale(0.96); }
+
+        /* Синя кнопка калькулятора */
+        #btn-calc-main {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        /* Інтерфейс калькулятора */
+        #tool-interface {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 24px;
+            width: 85%;
+            max-width: 320px;
+            margin-top: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+        }
+
+        input {
+            width: 90%;
+            padding: 14px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus { border-color: #3498db; }
+
+        #calc-result {
+            font-size: 18px;
+            color: #27ae60;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            min-height: 54px;
+        }
+
+        #action-button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            width: 100%;
+        }
+
+        #btn-close { color: #e74c3c; border-color: #faccc0; margin-top: 20px; }
+        .back-btn { background-color: #95a5a6; color: white; border: none; margin-top: 20px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <h2 id="header-title">Helper for BAS</h2>
+    <div class="version-tag">v1.1</div>
+    
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+    <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+
+    <div id="main-menu">
+        <button id="btn-calc-main" onclick="showMenu('calc-menu')">КАЛЬКУЛЯТОР 🧮</button>
+        <button id="btn-func" onclick="showMenu('function-menu')">Функції 🛠️</button>
+        <button id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
+        <button id="btn-close" onclick="tg.close()">Закрити ❌</button>
+    </div>
+
+    <div id="calc-menu" class="hidden">
+        <div id="calc-tools">
+            <button onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
+            <button onclick="openTool('cash')">Касовий звіт (-1%) 📝</button>
+            <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        </div>
+
+        <div id="tool-interface" class="hidden">
+            <h4 id="tool-name" style="margin-top:0; color:#2c3e50;">Інструмент</h4>
+            <input type="number" id="calc-input" placeholder="0.00" inputmode="decimal">
+            <div id="calc-result">Введіть суму</div>
+            <button id="action-button">Порахувати</button>
+            <button class="back-btn" onclick="closeTool()" style="background:#eee; color:#666; margin-top:10px;">ВІДМІНА</button>
+        </div>
+    </div>
+
+    <div id="function-menu" class="hidden">
+        <button id="btn-calc" onclick="processGeneric()">Рахувати показники 📊</button>
+        <button id="btn-search" onclick="processGeneric()">Шукати проблеми 🔍</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
+    <div id="lang-menu" class="hidden">
+        <button id="btn-ua" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
+        <button id="btn-en" onclick="selectLanguage('en')">English 🇺🇸</button>
+        <button id="btn-de" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
+        <button id="btn-pl" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
+
+        let currentLang = 'ua';
+        let activeTool = '';
+
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+        }
+
+        // Перемикання між екранами
+        function showMenu(menuId) {
+            playSound('click-sound');
+            const menus = ['main-menu', 'function-menu', 'lang-menu', 'calc-menu'];
+            menus.forEach(m => document.getElementById(m).classList.add('hidden'));
+            
+            document.getElementById('calc-tools').classList.remove('hidden');
+            document.getElementById('tool-interface').classList.add('hidden');
+            document.getElementById(menuId).classList.remove('hidden');
+        }
+
+        // Відкриття конкретного калькулятора
+        function openTool(tool) {
+            playSound('click-sound');
+            activeTool = tool;
+            document.getElementById('calc-tools').classList.add('hidden');
+            document.getElementById('tool-interface').classList.remove('hidden');
+            
+            const nameEl = document.getElementById('tool-name');
+            const btn = document.getElementById('action-button');
+            
+            if(tool === 'vat') {
+                nameEl.innerText = "ПДВ 20%";
+                btn.onclick = calculateVAT;
+            } else {
+                nameEl.innerText = "Звіт (-1%)";
+                btn.onclick = calculateCash;
+            }
+            
+            document.getElementById('calc-input').value = '';
+            document.getElementById('calc-result').innerText = 'Очікування вводу...';
+        }
+
+        // Функція ПДВ
+        function calculateVAT() {
+            const val = parseFloat(document.getElementById('calc-input').value);
+            if (isNaN(val)) return;
+            playSound('success-sound');
+            const vat = val * 0.20;
+            const total = val + vat;
+            document.getElementById('calc-result').innerHTML = `ПДВ (20%): <b>${vat.toFixed(2)}</b><br>Разом: <b>${total.toFixed(2)}</b>`;
+        }
+
+        // Функція Звіту
+        function calculateCash() {
+            const val = parseFloat(document.getElementById('calc-input').value);
+            if (isNaN(val)) return;
+            playSound('success-sound');
+            const commission = val * 0.01;
+            const net = val - commission;
+            document.getElementById('calc-result').innerHTML = `Комісія (1%): <b>${commission.toFixed(2)}</b><br>До каси: <b>${net.toFixed(2)}</b>`;
+        }
+
+        function closeTool() {
+            playSound('click-sound');
+            document.getElementById('tool-interface').classList.add('hidden');
+            document.getElementById('calc-tools').classList.remove('hidden');
+        }
+
+        // Зміна мови
+        function selectLanguage(langCode) {
+            playSound('click-sound');
+            currentLang = langCode;
+            if (typeof translations !== 'undefined') {
+                const langData = translations[langCode]; 
+                for (let id in langData) {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = langData[id];
+                }
+            }
+        }
+
+        // Стандартна анімація "Завантаження" для інших кнопок
+        function processGeneric() {
+            playSound('click-sound');
+            const header = document.getElementById('header-title');
+            header.innerText = "⏳...";
+            setTimeout(() => {
+                playSound('success-sound');
+                header.innerText = "✅ Done";
+                setTimeout(() => { header.innerText = "Helper for BAS"; }, 1500);
+            }, 800);
+        }
+    </script>
+</body>
+</html>
