@@ -10,7 +10,7 @@
             cursor: pointer; width: 80%; transition: 0.3s;
         }
         button:active { background-color: #2980b9; transform: scale(0.98); }
-        .hidden { display: none; }
+        .hidden { display: none !important; } /* Додав !important для надійності */
     </style>
 </head>
 <body>
@@ -39,19 +39,24 @@
         tg.expand();
 
         function showMenu(menuId) {
-            // Списки всіх твоїх ID меню
-            const menus = ['main-menu', 'function-menu', 'lang-menu'];
-            
-            menus.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    if (id === menuId) {
-                        element.classList.remove('hidden');
-                    } else {
-                        element.classList.add('hidden');
-                    }
-                }
-            });
+            // Отримуємо всі блоки меню
+            const mainMenu = document.getElementById('main-menu');
+            const funcMenu = document.getElementById('function-menu');
+            const langMenu = document.getElementById('lang-menu');
+
+            // Спочатку ховаємо абсолютно все
+            mainMenu.classList.add('hidden');
+            if(funcMenu) funcMenu.classList.add('hidden');
+            if(langMenu) langMenu.classList.add('hidden');
+
+            // Показуємо тільки те, що натиснули
+            const targetMenu = document.getElementById(menuId);
+            if (targetMenu) {
+                targetMenu.classList.remove('hidden');
+            } else {
+                // Якщо раптом меню не знайшлося, повертаємо головне, щоб не було пусто
+                mainMenu.classList.remove('hidden');
+            }
         }
 
         function sendData(text) {
