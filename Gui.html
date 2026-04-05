@@ -12,18 +12,27 @@
     </style>
 </head>
 <body>
-    <h3>Мій Mini App</h3>
-    <button onclick="sendData('Привіт від кнопки 1!')">Кнопка 1</button>
-    <button onclick="sendData('Я вибрав опцію 2')">Кнопка 2</button>
-    <button onclick="sendData('Закрити GUI')">Закрити</button>
+      <h3>Helper for BAS v1.0</h3>
+    
+    <div id="main-menu">
+        <button onclick="sendData('language_menu')">МОВА 🌍</button>
+        <button onclick="sendData('help')">ДОПОМОГА ❓</button>
+    </div>
+
+    <div id="lang-menu" style="display:none;">
+        <button onclick="sendData('set_ua')">Українська 🇺🇦</button>
+        <button onclick="sendData('set_en')">English 🇺🇸</button>
+        <button onclick="sendData('back_to_main')">НАЗАД ⬅️</button>
+    </div>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand(); // Розгортає вікно на весь екран
+        tg.expand();
 
-        function sendData(text) {
-            tg.sendData(text); // Відправляє текст боту
-            tg.close(); // Закриває вікно після натискання
+        function sendData(command) {
+            tg.sendData(command); 
+            // Якщо хочеш, щоб вікно не закривалося одразу, 
+            // прибери рядок tg.close()
         }
     </script>
 </body>
