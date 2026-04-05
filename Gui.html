@@ -95,9 +95,9 @@
     </div>
 
     <div id="calc-menu" class="hidden btn-container">
-        <button class="menu-btn sub-fin" id="btn-fin-simple">Швидкий розрахунок 🔢</button>
-        <button class="menu-btn sub-fin" id="btn-fin-vat">Розрахунок ПДВ (20%) 💰</button>
-        <button class="menu-btn sub-fin" id="btn-fin-acc">Бухгалтерія (ПДВ) 📑</button>
+        <button class="menu-btn sub-fin" id="btn-fin-simple" onclick="sendTask('quick_calc')">Швидкий розрахунок 🔢</button>
+        <button class="menu-btn sub-fin" id="btn-fin-vat" onclick="sendTask('vat_20')">Розрахунок ПДВ (20%) 💰</button>
+        <button class="menu-btn sub-fin" id="btn-fin-acc" onclick="sendTask('accounting_vat')">Бухгалтерія (ПДВ) 📑</button>
         <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -155,6 +155,7 @@
         }
 
         function sendTask(action) {
+            // Тепер кнопки відправляють JSON рядок у Telegram
             tg.sendData(JSON.stringify({action: action}));
             setTimeout(() => tg.close(), 500);
         }
