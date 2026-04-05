@@ -8,151 +8,88 @@
     <script src="languages.js"></script>
     
     <style>
-        /* ОСНОВНИЙ ДИЗАЙН */
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
-            background-attachment: fixed;
-            color: #333;
-            text-align: center; 
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            padding-top: 40px; 
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            -webkit-tap-highlight-color: transparent;
+            background-attachment: fixed; color: #333; text-align: center; 
+            font-family: 'Segoe UI', Roboto, sans-serif; padding-top: 40px; margin: 0;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        #header-title {
-            margin-bottom: 25px;
-            font-weight: 600;
-            font-size: 24px;
-            color: #2c3e50;
-            transition: 0.4s;
-        }
+        #header-title { margin-bottom: 25px; font-weight: 600; font-size: 24px; color: #2c3e50; }
+        .version-tag { position: fixed; left: 15px; bottom: 10px; font-size: 10px; color: rgba(0,0,0,0.2); }
 
-        .version-tag { 
-            position: fixed; left: 15px; bottom: 10px;
-            font-size: 10px; color: rgba(0, 0, 0, 0.2);
-            pointer-events: none;
-        }
-
-        /* БАЗОВИЙ СТИЛЬ КНОПОК */
         button { 
-            background-color: white;
-            color: #444; border: 1px solid #ddd; padding: 16px 20px; 
-            margin: 8px 0; border-radius: 18px; font-size: 17px;
-            font-weight: 500; cursor: pointer; width: 90%; 
-            max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background-color: white; color: #444; border: 1px solid #ddd; padding: 16px 20px; 
+            margin: 8px 0; border-radius: 18px; font-size: 17px; font-weight: 500; cursor: pointer; 
+            width: 90%; max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-            outline: none;
         }
 
-        /* --- ЕФЕКТИ НАВЕДЕННЯ (HOVER) --- */
-        
+        /* --- ЕФЕКТИ HOVER --- */
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Калькулятор - Зелений */
         #btn-calc-main:hover, #action-button:hover {
             background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
-            color: white !important;
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.4);
-            border: none !important;
+            color: white !important; transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.4); border: none !important;
         }
 
-        /* Функції - Золотий */
-        #btn-func:hover, #btn-calc:hover, #btn-search:hover {
-            background: linear-gradient(45deg, #f1c40f, #f39c12) !important;
-            color: white !important;
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 10px 20px rgba(243, 156, 18, 0.4);
-            border: none !important;
-        }
-
-        /* Мова - Переливання (Червоний-Синій) */
         #btn-lang-menu:hover {
             background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
-            background-size: 400% 400% !important;
-            animation: gradientAnimation 3s ease infinite !important;
-            color: white !important;
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(44, 120, 254, 0.5);
-            border: none !important;
+            background-size: 400% 400% !important; animation: gradientAnimation 3s ease infinite !important;
+            color: white !important; transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(44, 120, 254, 0.5); border: none !important;
         }
 
-        /* Закрити - Червоний */
-        #btn-close:hover {
-            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
-            color: white !important;
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.4);
-            border: none !important;
+        #btn-vat-tool:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9) !important;
+            color: white !important; transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.4); border: none !important;
         }
 
-        /* Назад та Відміна - Темний */
-        .back-btn:hover {
-            background: #34495e !important;
-            color: white !important;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        #btn-cash-tool:hover {
+            background: linear-gradient(45deg, #5d6d7e, #2c3e50) !important;
+            color: white !important; transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.4); border: none !important;
         }
 
-        /* ІНТЕРФЕЙС КАЛЬКУЛЯТОРА */
+        #lang-menu button:hover {
+            background-color: #ebf5ff !important; border-color: #3498db !important;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* ІНТЕРФЕЙС */
         #tool-interface {
             background: white; padding: 25px 20px; border-radius: 24px;
-            width: 85%; max-width: 320px; margin-top: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+            width: 85%; max-width: 320px; margin-top: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.07);
         }
-        /* --- 6. КНОПКИ ВИБОРУ МОВ (Додаємо рух) --- */
-#lang-menu button:hover {
-    background-color: #ebf5ff !important;
-    border-color: #3498db !important;
-    color: #2980b9 !important;
-    transform: translateY(-3px) scale(1.05); /* Кнопка підлітає та збільшується */
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
-}
-
-/* --- 7. КНОПКИ ВСЕРЕДИНІ КАЛЬКУЛЯТОРА (Специфічні кольори) --- */
-
-/* Кнопка ПДВ */
-#btn-vat-tool:hover {
-    background: linear-gradient(45deg, #3498db, #2980b9) !important;
-    color: white !important;
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.4);
-    border: none !important;
-}
-
-/* Кнопка Касовий звіт */
-#btn-cash-tool:hover {
-    background: linear-gradient(45deg, #5d6d7e, #2c3e50) !important;
-    color: white !important;
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 10px 20px rgba(44, 62, 80, 0.4);
-    border: none !important;
-}
 
         input {
-            width: 90%; padding: 14px; border: 2px solid #eee;
-            border-radius: 12px; font-size: 20px; margin-bottom: 15px;
-            text-align: center; outline: none; transition: 0.3s;
+            width: 90%; padding: 14px; border: 2px solid #eee; border-radius: 12px;
+            font-size: 22px; margin-bottom: 15px; text-align: center; outline: none;
         }
-        input:focus { border-color: #3498db; }
 
-        #calc-result { font-size: 18px; color: #27ae60; margin-bottom: 20px; min-height: 54px; }
+        /* Стиль результату (тепер клікабельний) */
+        #calc-result {
+            font-size: 18px; color: #2c3e50; margin-bottom: 20px; padding: 10px;
+            background: #f8f9fa; border-radius: 12px; cursor: pointer;
+            transition: 0.3s; border: 1px dashed transparent;
+        }
+        #calc-result:active { background: #e8f5e9; transform: scale(0.98); }
+        #calc-result b { color: #27ae60; font-size: 20px; }
+
+        .copy-hint { font-size: 10px; color: #95a5a6; display: block; margin-top: 5px; }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <h2 id="header-title">Helper for BAS</h2>
-    <div class="version-tag">v1.1</div>
+    <div class="version-tag">v1.2</div>
     
     <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
     <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
@@ -174,7 +111,9 @@
         <div id="tool-interface" class="hidden">
             <h4 id="tool-name" style="margin-top:0;">Інструмент</h4>
             <input type="number" id="calc-input" placeholder="0.00" inputmode="decimal">
-            <div id="calc-result">Введіть суму</div>
+            <div id="calc-result" onclick="copyResult()">
+                <span id="result-text">Введіть суму</span>
+            </div>
             <button id="action-button">Порахувати</button>
             <button class="back-btn" id="btn-cancel-tool" onclick="closeTool()" style="background:#eee; color:#666; margin-top:10px;">ВІДМІНА</button>
         </div>
@@ -182,7 +121,6 @@
 
     <div id="function-menu" class="hidden">
         <button id="btn-calc" onclick="processGeneric()">Рахувати показники 📊</button>
-        <button id="btn-search" onclick="processGeneric()">Шукати проблеми 🔍</button>
         <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -196,8 +134,9 @@
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand(); tg.ready();
+        tg.expand();
         let currentLang = 'ua';
+        let lastResult = "";
 
         function playSound(id) {
             const sound = document.getElementById(id);
@@ -216,37 +155,40 @@
             playSound('click-sound');
             document.getElementById('calc-tools').classList.add('hidden');
             document.getElementById('tool-interface').classList.remove('hidden');
-            
-            const nameEl = document.getElementById('tool-name');
-            const btn = document.getElementById('action-button');
             const langData = translations[currentLang];
-
-            if(tool === 'vat') {
-                nameEl.innerText = langData['btn-vat-tool'];
-                btn.onclick = () => { calculateVAT(); tg.sendData("vat"); };
-            } else {
-                nameEl.innerText = langData['btn-cash-tool'];
-                btn.onclick = () => { calculateCash(); tg.sendData("cash"); };
-            }
-            
+            document.getElementById('tool-name').innerText = tool === 'vat' ? langData['btn-vat-tool'] : langData['btn-cash-tool'];
+            document.getElementById('action-button').onclick = tool === 'vat' ? calculateVAT : calculateCash;
             document.getElementById('calc-input').value = '';
-            document.getElementById('calc-result').innerText = langData['calc-wait'];
+            document.getElementById('result-text').innerText = langData['calc-wait'];
+            lastResult = "";
         }
 
         function calculateVAT() {
             const val = parseFloat(document.getElementById('calc-input').value);
             if (isNaN(val)) return;
             playSound('success-sound');
-            const vat = val * 0.20;
-            document.getElementById('calc-result').innerHTML = `ПДВ: <b>${vat.toFixed(2)}</b><br>Разом: <b>${(val + vat).toFixed(2)}</b>`;
+            const vat = (val * 0.20).toFixed(2);
+            lastResult = vat;
+            document.getElementById('result-text').innerHTML = `ПДВ: <b>${vat}</b><br><span class="copy-hint">(Натисни, щоб скопіювати цифру)</span>`;
         }
 
         function calculateCash() {
             const val = parseFloat(document.getElementById('calc-input').value);
             if (isNaN(val)) return;
             playSound('success-sound');
-            const comm = val * 0.01;
-            document.getElementById('calc-result').innerHTML = `Комісія: <b>${comm.toFixed(2)}</b><br>Чисто: <b>${(val - comm).toFixed(2)}</b>`;
+            const net = (val - (val * 0.01)).toFixed(2);
+            lastResult = net;
+            document.getElementById('result-text').innerHTML = `До каси: <b>${net}</b><br><span class="copy-hint">(Натисни, щоб скопіювати цифру)</span>`;
+        }
+
+        // ФУНКЦІЯ КОПІЮВАННЯ
+        function copyResult() {
+            if (!lastResult) return;
+            navigator.clipboard.writeText(lastResult).then(() => {
+                const oldText = document.getElementById('result-text').innerHTML;
+                document.getElementById('result-text').innerHTML = "<b>СКОПІЙОВАНО! ✅</b>";
+                setTimeout(() => { document.getElementById('result-text').innerHTML = oldText; }, 1000);
+            });
         }
 
         function closeTool() {
@@ -258,14 +200,12 @@
         function selectLanguage(langCode) {
             playSound('click-sound');
             currentLang = langCode;
-            if (typeof translations !== 'undefined') {
-                const langData = translations[langCode];
-                for (let id in langData) {
-                    const el = document.getElementById(id);
-                    if (el) el.innerText = langData[id];
-                }
-                document.getElementById('action-button').innerText = langData['action-button'];
+            const langData = translations[langCode];
+            for (let id in langData) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = langData[id];
             }
+            document.getElementById('action-button').innerText = langData['action-button'];
             tg.sendData("set_" + langCode);
         }
 
@@ -273,11 +213,7 @@
             playSound('click-sound');
             const h = document.getElementById('header-title');
             h.innerText = "⏳...";
-            setTimeout(() => {
-                playSound('success-sound');
-                h.innerText = "✅ Done";
-                setTimeout(() => { h.innerText = "Helper for BAS"; }, 1500);
-            }, 800);
+            setTimeout(() => { playSound('success-sound'); h.innerText = "✅ Done"; setTimeout(() => { h.innerText = "Helper for BAS"; }, 1500); }, 800);
         }
     </script>
 </body>
