@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html lang="uk">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -38,45 +36,48 @@
             display: flex; 
             justify-content: center; 
             align-items: center;
-            overflow: hidden; /* Щоб фон не виходив за межі */
+            overflow: hidden; 
             z-index: 1;
         }
 
-        /* Псевдоелемент для кольорової лінії, що розширюється */
         .menu-btn::before {
             content: "";
             position: absolute;
             top: 0;
             left: 0;
-            width: 6px; /* Початкова товщина лінії зліва */
+            width: 6px; 
             height: 100%;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: -1;
         }
 
-        /* ЕФЕКТ ПРИ НАВЕДЕННІ (HOVER) */
         .menu-btn:hover::before {
-            width: 100%; /* Лінія розширюється на всю кнопку */
+            width: 100%; 
         }
 
         .menu-btn:hover {
-            color: #000; /* Текст стає чорним для контрасту */
+            color: #000; 
             border-color: transparent;
             transform: translateY(-3px);
         }
 
         .menu-btn:active { transform: scale(0.98); }
 
-        /* КОЛЬОРИ ДЛЯ КОЖНОЇ КНОПКИ */
-        #btn-calc-main::before { background: #2ecc71; } /* Зелений для Фінансів */
-        #btn-func::before { background: #f1c40f; }      /* Жовтий для Функцій */
-        #btn-lang-menu::before { background: #3498db; } /* Синій для Мови */
-        #btn-close::before { background: #e74c3c; }     /* Червоний для Закрити */
+        /* КОЛЬОРИ ДЛЯ ГОЛОВНОГО МЕНЮ */
+        #btn-calc-main::before { background: #2ecc71; } 
+        #btn-func::before { background: #f1c40f; }      
+        #btn-lang-menu::before { background: #3498db; } 
+        #btn-close::before { background: #e74c3c; }     
+
+        /* КОЛЬОРИ ДЛЯ ПІДМЕНЮ (ФІНАНСИ ТА ФУНКЦІЇ) */
+        .sub-fin::before { background: #2ecc71; }
+        .sub-func::before { background: #f1c40f; }
 
         .back-btn-style {
             background: #24272e !important; border: 1px solid #40444b !important;
             color: #8e9297 !important; margin-top: 15px !important; font-size: 15px !important; padding: 15px !important;
         }
+        .back-btn-style::before { display: none; }
 
         .hidden { display: none !important; }
     </style>
@@ -93,6 +94,20 @@
         <button class="menu-btn" id="btn-close" onclick="tg.close()">Закрити ❌</button>
     </div>
 
+    <div id="calc-menu" class="hidden btn-container">
+        <button class="menu-btn sub-fin" id="btn-fin-simple">Швидкий розрахунок 🔢</button>
+        <button class="menu-btn sub-fin" id="btn-fin-vat">Розрахунок ПДВ (20%) 💰</button>
+        <button class="menu-btn sub-fin" id="btn-fin-acc">Бухгалтерія (ПДВ) 📑</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
+    <div id="function-menu" class="hidden btn-container">
+        <button class="menu-btn sub-func" id="btn-calc-metrics" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
+        <button class="menu-btn sub-func" id="btn-find-issues" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
+        <button class="menu-btn" id="btn-stop-all" style="position:relative; border-left: 6px solid #e74c3c;" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
     <div id="lang-menu" class="hidden btn-container">
         <button class="menu-btn" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
         <button class="menu-btn" onclick="selectLanguage('en')">English 🇺🇸</button>
@@ -101,21 +116,15 @@
         <button class="menu-btn back-btn-style" id="btn-back-lang" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
-    <div id="function-menu" class="hidden btn-container">
-        <button class="menu-btn" id="btn-calc-metrics" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
-        <button class="menu-btn" id="btn-stop-all" style="position:relative;" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
-        <button class="menu-btn back-btn-style" id="btn-back-func" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
-    </div>
-
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
         const translations = {
-            ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️", metrics: "Рахувати показники 📊", stop: "ЗУПИНИТИ ВСЕ 🛑" },
-            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️", metrics: "Calculate metrics 📊", stop: "STOP ALL 🛑" },
-            pl: { title: "DERAS HELPER v1.0", calc: "FINANSE 💸", func: "FUNKCJE BAS 🛠️", lang: "JĘZYK 🌍", close: "Zamknij ❌", back: "POWRÓT ⬅️", metrics: "Oblicz wskaźники 📊", stop: "ZATRZYMAJ WSZYSTKO 🛑" },
-            de: { title: "DERAS HELPER v1.0", calc: "FINANZEN 💸", func: "BAS FUNKTIONEN 🛠️", lang: "SPRACHE 🌍", close: "Schließen ❌", back: "ZURÜCK ⬅️", metrics: "Metriken berechnen 📊", stop: "ALLES STOPPEN 🛑" }
+            ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️", metrics: "Рахувати показники 📊", issues: "Шукати проблеми 🔍", stop: "ЗУПИНИТИ ВСЕ 🛑" },
+            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️", metrics: "Calculate metrics 📊", issues: "Search issues 🔍", stop: "STOP ALL 🛑" },
+            pl: { title: "DERAS HELPER v1.0", calc: "FINANSE 💸", func: "FUNKCJE BAS 🛠️", lang: "JĘZYK 🌍", close: "Zamknij ❌", back: "POWRÓT ⬅️", metrics: "Oblicz wskaźники 📊", issues: "Szukaj problemów 🔍", stop: "ZATRZYMAJ WSZYSTKO 🛑" },
+            de: { title: "DERAS HELPER v1.0", calc: "FINANZEN 💸", func: "BAS FUNKTIONEN 🛠️", lang: "SPRACHE 🌍", close: "Schließen ❌", back: "ZURÜCK ⬅️", metrics: "Metriken berechnen 📊", issues: "Probleme suchen 🔍", stop: "ALLES STOPPEN 🛑" }
         };
 
         function selectLanguage(lang) {
@@ -126,6 +135,8 @@
             document.getElementById('btn-lang-menu').innerText = t.lang;
             document.getElementById('btn-close').innerText = t.close;
             document.getElementById('btn-calc-metrics').innerText = t.metrics;
+            document.getElementById('btn-find-issues').innerText = t.issues;
+            document.getElementById('btn-stop-all').innerText = t.stop;
             document.querySelectorAll('.back-btn-style').forEach(btn => btn.innerText = t.back);
 
             playSound('click-sound');
