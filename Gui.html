@@ -8,6 +8,7 @@
     <script src="languages.js"></script>
     
     <style>
+        /* ОСНОВНИЙ ДИЗАЙН */
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
             background-attachment: fixed;
@@ -21,7 +22,6 @@
             align-items: center;
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            position: relative;
         }
 
         #header-title {
@@ -29,140 +29,97 @@
             font-weight: 600;
             font-size: 24px;
             color: #2c3e50;
-            transition: 0.3s;
+            transition: 0.4s;
         }
 
         .version-tag { 
-            position: fixed; left: 15px; bottom: 10px; margin: 0;
-            font-weight: 500; font-size: 10px; color: rgba(0, 0, 0, 0.2);
-            pointer-events: none; z-index: 999;
+            position: fixed; left: 15px; bottom: 10px;
+            font-size: 10px; color: rgba(0, 0, 0, 0.2);
+            pointer-events: none;
         }
 
+        /* БАЗОВИЙ СТИЛЬ КНОПОК */
         button { 
             background-color: white;
             color: #444; border: 1px solid #ddd; padding: 16px 20px; 
-            margin: 8px 0; border-radius: 16px; font-size: 17px;
+            margin: 8px 0; border-radius: 18px; font-size: 17px;
             font-weight: 500; cursor: pointer; width: 90%; 
             max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
             outline: none;
         }
 
-        button:active { background-color: #f8f9fa; transform: scale(0.96); }
-
-        /* Синя кнопка калькулятора */
-        #btn-calc-main {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            font-weight: 600;
+        /* --- ЕФЕКТИ НАВЕДЕННЯ (HOVER) --- */
+        
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Інтерфейс калькулятора */
+        /* Калькулятор - Зелений */
+        #btn-calc-main:hover, #action-button:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
+            color: white !important;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.4);
+            border: none !important;
+        }
+
+        /* Функції - Золотий */
+        #btn-func:hover, #btn-calc:hover, #btn-search:hover {
+            background: linear-gradient(45deg, #f1c40f, #f39c12) !important;
+            color: white !important;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(243, 156, 18, 0.4);
+            border: none !important;
+        }
+
+        /* Мова - Переливання (Червоний-Синій) */
+        #btn-lang-menu:hover {
+            background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
+            background-size: 400% 400% !important;
+            animation: gradientAnimation 3s ease infinite !important;
+            color: white !important;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(44, 120, 254, 0.5);
+            border: none !important;
+        }
+
+        /* Закрити - Червоний */
+        #btn-close:hover {
+            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+            color: white !important;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.4);
+            border: none !important;
+        }
+
+        /* Назад та Відміна - Темний */
+        .back-btn:hover {
+            background: #34495e !important;
+            color: white !important;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* ІНТЕРФЕЙС КАЛЬКУЛЯТОРА */
         #tool-interface {
-            background: white;
-            padding: 25px 20px;
-            border-radius: 24px;
-            width: 85%;
-            max-width: 320px;
-            margin-top: 15px;
+            background: white; padding: 25px 20px; border-radius: 24px;
+            width: 85%; max-width: 320px; margin-top: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.07);
         }
 
         input {
-            width: 90%;
-            padding: 14px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            font-size: 20px;
-            margin-bottom: 15px;
-            text-align: center;
-            outline: none;
-            transition: border-color 0.3s;
+            width: 90%; padding: 14px; border: 2px solid #eee;
+            border-radius: 12px; font-size: 20px; margin-bottom: 15px;
+            text-align: center; outline: none; transition: 0.3s;
         }
-
         input:focus { border-color: #3498db; }
 
-        #calc-result {
-            font-size: 18px;
-            color: #27ae60;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            min-height: 54px;
-        }
+        #calc-result { font-size: 18px; color: #27ae60; margin-bottom: 20px; min-height: 54px; }
 
-        #action-button {
-            background: #27ae60;
-            color: white;
-            border: none;
-            width: 100%;
-        }
-
-        #btn-close { color: #e74c3c; border-color: #faccc0; margin-top: 20px; }
-        .back-btn { background-color: #95a5a6; color: white; border: none; margin-top: 20px; }
         .hidden { display: none !important; }
-        /* Ефект при наведенні для кнопки Калькулятора */
-#btn-calc-main:hover {
-    background-color: #27ae60 !important; /* Зелений */
-    color: white !important;
-    border-color: #219150;
-    transform: translateY(-3px); /* Кнопка трохи підстрибує вгору */
-    box-shadow: 0 6px 15px rgba(39, 174, 96, 0.3);
-}
-
-/* Ефект для Функцій */
-#btn-func:hover {
-    background-color: #f39c12 !important; /* Помаранчевий */
-    color: white !important;
-    border-color: #e67e22;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(243, 156, 18, 0.3);
-}
-
-/* 1. СТВОРЮЄМО АНІМАЦІЮ "ПЕРЕЛИВАННЯ" (додай це в кінець <style>) */
-@keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }   /* Початок: червоний */
-    50% { background-position: 100% 50%; } /* Середина: синій */
-    100% { background-position: 0% 50%; }  /* Кінець: знову червоний */
-}
-
-/* 2. ОНОВЛЕНИЙ ЕФЕКТ ДЛЯ МОВИ (знайди стару '#btn-lang-menu:hover' і заміни) */
-#btn-lang-menu:hover {
-    /* Робимо градієнт завеликим, щоб було куди переливатися */
-    background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
-    background-size: 400% 400% !important; /* Розмір градієнта в 4 рази більше кнопки */
-    
-    color: white !important;
-    border: none !important; /* Прибираємо рамку, щоб не заважала */
-    
-    /* Піднімаємо кнопку (залишаємо приємний ефект) */
-    transform: translateY(-4px) scale(1.02); 
-    
-    /* Запускаємо анімацію: назва, час (4с), м'якість (ease), нескінченно (infinite) */
-    animation: gradientAnimation 4s ease infinite !important;
-    
-    /* Додаємо кольорове світіння */
-    box-shadow: 0 8px 20px rgba(44, 120, 254, 0.4);
-}
-
-/* Переконайтеся, що transition плавним (якщо ще немає) */
-button {
-    transition: all 0.3s ease !important;
-}
-
-/* Ефект для Закрити */
-#btn-close:hover {
-    background-color: #e74c3c !important; /* Червоний */
-    color: white !important;
-    border-color: #c0392b;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
-}
-
-/* Плавний перехід для всіх кнопок (щоб колір мінявся не різко) */
-button {
-    transition: all 0.3s ease !important;
-}
     </style>
 </head>
 <body>
@@ -181,17 +138,17 @@ button {
 
     <div id="calc-menu" class="hidden">
         <div id="calc-tools">
-            <button onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
-            <button onclick="openTool('cash')">Касовий звіт (-1%) 📝</button>
-            <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+            <button id="btn-vat-tool" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
+            <button id="btn-cash-tool" onclick="openTool('cash')">Касовий звіт (-1%) 📝</button>
+            <button class="back-btn" id="btn-back-calc" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
         </div>
 
         <div id="tool-interface" class="hidden">
-            <h4 id="tool-name" style="margin-top:0; color:#2c3e50;">Інструмент</h4>
+            <h4 id="tool-name" style="margin-top:0;">Інструмент</h4>
             <input type="number" id="calc-input" placeholder="0.00" inputmode="decimal">
             <div id="calc-result">Введіть суму</div>
             <button id="action-button">Порахувати</button>
-            <button class="back-btn" onclick="closeTool()" style="background:#eee; color:#666; margin-top:10px;">ВІДМІНА</button>
+            <button class="back-btn" id="btn-cancel-tool" onclick="closeTool()" style="background:#eee; color:#666; margin-top:10px;">ВІДМІНА</button>
         </div>
     </div>
 
@@ -202,77 +159,66 @@ button {
     </div>
 
     <div id="lang-menu" class="hidden">
-        <button id="btn-ua" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
-        <button id="btn-en" onclick="selectLanguage('en')">English 🇺🇸</button>
-        <button id="btn-de" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
-        <button id="btn-pl" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
+        <button onclick="selectLanguage('ua')">Українська 🇺🇦</button>
+        <button onclick="selectLanguage('en')">English 🇺🇸</button>
+        <button onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
+        <button onclick="selectLanguage('pl')">Polski 🇵🇱</button>
         <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-
+        tg.expand(); tg.ready();
         let currentLang = 'ua';
-        let activeTool = '';
 
         function playSound(id) {
             const sound = document.getElementById(id);
             if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
         }
 
-        // Перемикання між екранами
         function showMenu(menuId) {
             playSound('click-sound');
-            const menus = ['main-menu', 'function-menu', 'lang-menu', 'calc-menu'];
-            menus.forEach(m => document.getElementById(m).classList.add('hidden'));
-            
+            ['main-menu', 'function-menu', 'lang-menu', 'calc-menu'].forEach(m => document.getElementById(m).classList.add('hidden'));
             document.getElementById('calc-tools').classList.remove('hidden');
             document.getElementById('tool-interface').classList.add('hidden');
             document.getElementById(menuId).classList.remove('hidden');
         }
 
-        // Відкриття конкретного калькулятора
         function openTool(tool) {
             playSound('click-sound');
-            activeTool = tool;
             document.getElementById('calc-tools').classList.add('hidden');
             document.getElementById('tool-interface').classList.remove('hidden');
             
             const nameEl = document.getElementById('tool-name');
             const btn = document.getElementById('action-button');
-            
+            const langData = translations[currentLang];
+
             if(tool === 'vat') {
-                nameEl.innerText = "ПДВ 20%";
-                btn.onclick = calculateVAT;
+                nameEl.innerText = langData['btn-vat-tool'];
+                btn.onclick = () => { calculateVAT(); tg.sendData("vat"); };
             } else {
-                nameEl.innerText = "Звіт (-1%)";
-                btn.onclick = calculateCash;
+                nameEl.innerText = langData['btn-cash-tool'];
+                btn.onclick = () => { calculateCash(); tg.sendData("cash"); };
             }
             
             document.getElementById('calc-input').value = '';
-            document.getElementById('calc-result').innerText = 'Очікування вводу...';
+            document.getElementById('calc-result').innerText = langData['calc-wait'];
         }
 
-        // Функція ПДВ
         function calculateVAT() {
             const val = parseFloat(document.getElementById('calc-input').value);
             if (isNaN(val)) return;
             playSound('success-sound');
             const vat = val * 0.20;
-            const total = val + vat;
-            document.getElementById('calc-result').innerHTML = `ПДВ (20%): <b>${vat.toFixed(2)}</b><br>Разом: <b>${total.toFixed(2)}</b>`;
+            document.getElementById('calc-result').innerHTML = `ПДВ: <b>${vat.toFixed(2)}</b><br>Разом: <b>${(val + vat).toFixed(2)}</b>`;
         }
 
-        // Функція Звіту
         function calculateCash() {
             const val = parseFloat(document.getElementById('calc-input').value);
             if (isNaN(val)) return;
             playSound('success-sound');
-            const commission = val * 0.01;
-            const net = val - commission;
-            document.getElementById('calc-result').innerHTML = `Комісія (1%): <b>${commission.toFixed(2)}</b><br>До каси: <b>${net.toFixed(2)}</b>`;
+            const comm = val * 0.01;
+            document.getElementById('calc-result').innerHTML = `Комісія: <b>${comm.toFixed(2)}</b><br>Чисто: <b>${(val - comm).toFixed(2)}</b>`;
         }
 
         function closeTool() {
@@ -281,34 +227,28 @@ button {
             document.getElementById('calc-tools').classList.remove('hidden');
         }
 
-        // Зміна мови
         function selectLanguage(langCode) {
-    playSound('click-sound');
-    currentLang = langCode;
-    if (typeof translations !== 'undefined') {
-        const langData = translations[langCode]; 
-        for (let id in langData) {
-            const el = document.getElementById(id);
-            if (el) {
-                // Якщо це поле вводу, змінюємо placeholder, інакше - текст
-                if (el.tagName === 'INPUT') el.placeholder = langData[id];
-                else el.innerText = langData[id];
+            playSound('click-sound');
+            currentLang = langCode;
+            if (typeof translations !== 'undefined') {
+                const langData = translations[langCode];
+                for (let id in langData) {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = langData[id];
+                }
+                document.getElementById('action-button').innerText = langData['action-button'];
             }
+            tg.sendData("set_" + langCode);
         }
-        // Окремо оновлюємо текст кнопки "Порахувати" та статус
-        document.getElementById('action-button').innerText = langData['calc-button'];
-        document.getElementById('calc-result').innerText = langData['calc-wait'];
-    }
-        }
-        // Стандартна анімація "Завантаження" для інших кнопок
+
         function processGeneric() {
             playSound('click-sound');
-            const header = document.getElementById('header-title');
-            header.innerText = "⏳...";
+            const h = document.getElementById('header-title');
+            h.innerText = "⏳...";
             setTimeout(() => {
                 playSound('success-sound');
-                header.innerText = "✅ Done";
-                setTimeout(() => { header.innerText = "Helper for BAS"; }, 1500);
+                h.innerText = "✅ Done";
+                setTimeout(() => { h.innerText = "Helper for BAS"; }, 1500);
             }, 800);
         }
     </script>
