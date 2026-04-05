@@ -9,10 +9,13 @@ const translations = {
         'btn-search': 'Шукати проблеми 🔍',
         'loading': '⏳ Обробка...',
         'done': '✅ Готово!',
-        'tool-vat': 'Розрахунок ПДВ 20%',
-        'tool-cash': 'Звіт (-1%)',
-        'calc-button': 'Порахувати',
-        'calc-wait': 'Очікування вводу...'
+        // Калькулятор
+        'btn-vat-tool': 'Розрахунок ПДВ (20%) 💰',
+        'btn-cash-tool': 'Касовий звіт (-1%) 📝',
+        'action-button': 'Порахувати',
+        'btn-back-calc': 'НАЗАД ⬅️',
+        'btn-cancel-tool': 'ВІДМІНА',
+        'calc-wait': 'Введіть суму'
     },
     'en': {
         'header-title': 'Helper for BAS',
@@ -24,10 +27,13 @@ const translations = {
         'btn-search': 'Search issues 🔍',
         'loading': '⏳ Loading...',
         'done': '✅ Done!',
-        'tool-vat': 'VAT Calculation 20%',
-        'tool-cash': 'Cash Report (-1%)',
-        'calc-button': 'Calculate',
-        'calc-wait': 'Waiting for input...'
+        // Calculator
+        'btn-vat-tool': 'VAT Calculation (20%) 💰',
+        'btn-cash-tool': 'Cash Report (-1%) 📝',
+        'action-button': 'Calculate',
+        'btn-back-calc': 'BACK ⬅️',
+        'btn-cancel-tool': 'CANCEL',
+        'calc-wait': 'Enter amount'
     },
     'de': {
         'header-title': 'BAS Helfer',
@@ -39,10 +45,13 @@ const translations = {
         'btn-search': 'Fehler suchen 🔍',
         'loading': '⏳ Laden...',
         'done': '✅ Fertig!',
-        'tool-vat': 'MwSt. Berechnung 20%',
-        'tool-cash': 'Kassenbericht (-1%)',
-        'calc-button': 'Berechnen',
-        'calc-wait': 'Warten auf Eingabe...'
+        // Calculator
+        'btn-vat-tool': 'MwSt. Berechnung (20%) 💰',
+        'btn-cash-tool': 'Kassenbericht (-1%) 📝',
+        'action-button': 'Berechnen',
+        'btn-back-calc': 'ZURÜCK ⬅️',
+        'btn-cancel-tool': 'ABBRECHEN',
+        'calc-wait': 'Betrag eingeben'
     },
     'pl': {
         'header-title': 'Pomocnik BAS',
@@ -54,9 +63,12 @@ const translations = {
         'btn-search': 'Szukaj problemów 🔍',
         'loading': '⏳ Ładowanie...',
         'done': '✅ Gotowe!',
-        'tool-vat': 'Obliczanie VAT 20%',
-        'tool-cash': 'Raport kasowy (-1%)',
-        'calc-button': 'Oblicz',
-        'calc-wait': 'Oczekiwanie на dane...'
+        // Calculator
+        'btn-vat-tool': 'Obliczanie VAT (20%) 💰',
+        'btn-cash-tool': 'Raport kasowy (-1%) 📝',
+        'action-button': 'Oblicz',
+        'btn-back-calc': 'POWRÓT ⬅️',
+        'btn-cancel-tool': 'ANULUJ',
+        'calc-wait': 'Wpisz kwotę'
     }
 };
