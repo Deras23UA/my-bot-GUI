@@ -29,10 +29,33 @@
     </div>
 
     <div id="lang-menu" class="hidden">
-        <button onclick="sendData('set_ua')">Українська 🇺🇦</button>
-        <button onclick="sendData('set_en')">English 🇺🇸</button>
-        <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
-    </div>
+    <button id="btn-ua" onclick="selectLanguage('ua', 'Українська 🇺🇦 ✅')">Українська 🇺🇦</button>
+    <button id="btn-en" onclick="selectLanguage('en', 'English 🇺🇸 ✅')">English 🇺🇸</button>
+    <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+</div>
+
+<script>
+    function selectLanguage(langCode, newText) {
+        // 1. Відправляємо дані боту (як і раніше)
+        // Використовуємо 'set_ua' або 'set_en'
+        tg.sendData('set_' + langCode);
+
+        // 2. Міняємо текст кнопки
+        if (langCode === 'ua') {
+            document.getElementById('btn-ua').innerText = newText;
+            document.getElementById('btn-en').innerText = 'English 🇺🇸'; // Скидаємо іншу кнопку
+        } else {
+            document.getElementById('btn-en').innerText = newText;
+            document.getElementById('btn-ua').innerText = 'Українська 🇺🇦'; // Скидаємо іншу кнопку
+        }
+
+        // 3. (Опціонально) Можна додати затримку перед закриттям, 
+        // щоб користувач встиг побачити галочку
+        setTimeout(() => {
+            tg.close();
+        }, 500); 
+    }
+</script>
 
     <script>
         let tg = window.Telegram.WebApp;
