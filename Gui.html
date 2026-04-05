@@ -6,7 +6,7 @@
     <title>Deras Helper GUI v1.0</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* --- ТВОЇ СТИЛІ СІТКИ КАЛЬКУЛЯТОРА --- */
+        /* --- СТИЛІ СІТКИ КАЛЬКУЛЯТОРА --- */
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -27,6 +27,7 @@
             padding: 0 !important;
             background: #ffffff;
             border: 1px solid #ddd;
+            color: #000;
         }
 
         .btn-zero {
@@ -39,7 +40,7 @@
 
         .btn-equal {
             grid-column: span 2;
-            background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+            background: linear-gradient(135deg, #00ff88, #008f4c) !important;
             color: white !important;
             border-radius: 30px !important;
             aspect-ratio: auto !important;
@@ -47,9 +48,9 @@
             border: none !important;
         }
 
-        /* --- НОВІ "ХАКЕРСЬКІ" ТЕМНІ СТИЛІ --- */
+        /* --- "ХАКЕРСЬКІ" ТЕМНІ СТИЛІ --- */
         body { 
-            background: #0f0f13; /* Темний фон як у профі */
+            background: #0f0f13; 
             color: #ffffff; 
             text-align: center; 
             font-family: 'Segoe UI', Roboto, sans-serif; 
@@ -67,6 +68,7 @@
             width: 90%; max-width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             outline: none; text-transform: uppercase; letter-spacing: 1px;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .menu-btn:hover {
@@ -76,6 +78,15 @@
         }
 
         .menu-btn:active { transform: scale(0.95); }
+
+        /* Стиль для кнопок НАЗАД */
+        .back-btn-style {
+            border-left: 5px solid #555 !important;
+            margin-top: 20px !important;
+            background: linear-gradient(135deg, #2a2a35, #1e1e26) !important;
+            color: #aaa !important;
+            font-size: 14px !important;
+        }
 
         /* Особливі кольори */
         #btn-calc-main { border-left: 5px solid #2ecc71; }
@@ -97,7 +108,6 @@
         }
 
         .hidden { display: none !important; }
-        .back-btn { background: #333 !important; color: #aaa !important; border: none !important; width: 100% !important; border-radius: 12px !important; margin-top: 15px;}
         .res-box { color: #00ff88; font-weight: bold; }
     </style>
 </head>
@@ -107,7 +117,7 @@
     <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
     <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
 
-    <div id="main-menu">
+    <div id="main-menu" class="btn-container">
         <button class="menu-btn" id="btn-calc-main" onclick="showMenu('calc-menu')">КАЛЬКУЛЯТОР 🧮</button>
         <button class="menu-btn" id="btn-func" onclick="showMenu('function-menu')">Функції BAS 🛠️</button>
         <button class="menu-btn" id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
@@ -116,10 +126,10 @@
 
     <div id="calc-menu" class="hidden">
         <div id="calc-tools">
-            <button class="menu-btn" id="btn-simple-calc" onclick="openSimpleCalc()">Швидкий розрахунок 🔢</button>
-            <button class="menu-btn" id="btn-vat-tool" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
-            <button class="menu-btn" id="btn-acc-tool" onclick="openTool('acc')">Бухгалтерія (ПДВ) 📑</button>
-            <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+            <button class="menu-btn" onclick="openSimpleCalc()">Швидкий розрахунок 🔢</button>
+            <button class="menu-btn" onclick="openTool('vat')">Розрахунок ПДВ (20%) 💰</button>
+            <button class="menu-btn" onclick="openTool('acc')">Бухгалтерія (ПДВ) 📑</button>
+            <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
         </div>
 
         <div id="simple-calc-interface" class="hidden card">
@@ -135,31 +145,33 @@
                 <button class="btn-zero" onclick="press('0')">0</button>
                 <button class="btn-equal" onclick="runEval()">=</button>
             </div>
-            <button class="back-btn" onclick="showMenu('calc-menu')">НАЗАД</button>
+            <button class="menu-btn back-btn-style" onclick="showMenu('calc-menu')">НАЗАД ⬅️</button>
         </div>
 
         <div id="tool-interface" class="hidden card">
-            <h4 id="tool-name" style="margin:0 0 15px 0;">Інструмент</h4>
+            <h4 id="tool-name" style="margin:0 0 15px 0; color:#00ff88;">Інструмент</h4>
             <input type="number" id="calc-input" placeholder="0.00">
             <div class="res-box" id="result-box" style="padding:15px; background:#000; border-radius:12px; margin-bottom:10px; width:90%;">
                 <span id="result-text">Введіть суму</span>
             </div>
-            <button class="menu-btn" id="action-button" style="width:100%">Порахувати</button>
-            <button class="back-btn" onclick="showMenu('calc-menu')">НАЗАД</button>
+            <button class="menu-btn" id="action-button" style="width:100%; border-left:none; background:#00ff88; color:#000;">Порахувати</button>
+            <button class="menu-btn back-btn-style" onclick="showMenu('calc-menu')">НАЗАД ⬅️</button>
         </div>
     </div>
 
     <div id="function-menu" class="hidden">
-        <button class="menu-btn" id="btn-calc" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
-        <button class="menu-btn" id="btn-search" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
+        <button class="menu-btn" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
+        <button class="menu-btn" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
         <button class="menu-btn" style="border-left:5px solid #ff4444" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
-        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <div id="lang-menu" class="hidden">
         <button class="menu-btn" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
         <button class="menu-btn" onclick="selectLanguage('en')">English 🇺🇸</button>
-        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button class="menu-btn" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
+        <button class="menu-btn" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <script>
@@ -173,12 +185,20 @@
         }
 
         function showMenu(id) {
-            document.querySelectorAll('div[id]').forEach(m => {
-                if(m.id !== 'main-menu' && m.id !== 'calc-menu' && m.id !== 'function-menu' && m.id !== 'lang-menu' && m.id !== 'calc-tools' && m.id !== 'simple-calc-interface' && m.id !== 'tool-interface') return;
-                m.classList.add('hidden');
+            // Ховаємо абсолютно всі контейнери
+            const menus = ['main-menu', 'calc-menu', 'function-menu', 'lang-menu', 'calc-tools', 'simple-calc-interface', 'tool-interface'];
+            menus.forEach(mId => {
+                const el = document.getElementById(mId);
+                if(el) el.classList.add('hidden');
             });
-            document.getElementById(id).classList.remove('hidden');
+
+            // Показуємо потрібний
+            const target = document.getElementById(id);
+            if(target) target.classList.remove('hidden');
+
+            // Якщо йдемо в меню калькуляторів, показуємо вибір інструментів
             if(id === 'calc-menu') document.getElementById('calc-tools').classList.remove('hidden');
+            
             playSound('click-sound');
         }
 
@@ -222,16 +242,11 @@
             playSound('success-sound');
         }
 
-        // ЦЯ ФУНКЦІЯ ВІДПРАВЛЯЄ КОМАНДУ В БОТ (У ТВІЙ USERS.JSON)
         function sendTask(action) {
             playSound('click-sound');
-            // Передаємо дію в бот
             tg.sendData(JSON.stringify({action: action}));
-            
-            // Візуальний ефект відправки
             document.getElementById('header-title').innerText = "📡 ПЕРЕДАЧА ДАНИХ...";
             document.body.style.opacity = "0.5";
-            
             setTimeout(() => tg.close(), 800);
         }
 
