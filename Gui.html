@@ -2,34 +2,69 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* СУЧАСНИЙ ДИЗАЙН: Градієнт та модерні кнопки */
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #ffdfdf 100%);
             background-attachment: fixed;
             color: #333;
             text-align: center; 
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             padding-top: 30px; 
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent; /* Прибирає синій спалах при натисканні на мобілці */
         }
-        h3 { margin-bottom: 25px; font-weight: 600; color: #444; }
+
+        h3 {
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* Кнопки (Сірі, з легким скляним ефектом) */
         button { 
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #555; border: 1px solid #ddd; padding: 16px 30px; 
-            margin: 10px 0; border-radius: 15px; font-size: 17px;
-            font-weight: 500; cursor: pointer; width: 90%; 
-            max-width: 350px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            transition: 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #555; 
+            border: 1px solid #ddd; 
+            padding: 16px 20px; 
+            margin: 8px 0; 
+            border-radius: 15px; 
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer; 
+            width: 90%; 
+            max-width: 350px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+            outline: none;
         }
-        button:active { background-color: #f1f1f1; transform: scale(0.96); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        #btn-close { color: #e74c3c; border-color: #faccc0; background-color: rgba(255, 235, 235, 0.9); }
-        .back-btn { background-color: #ff7675; color: white; border: none; margin-top: 20px; }
+
+        /* Ефект натискання */
+        button:active { 
+            background-color: #f1f1f1; 
+            transform: scale(0.97); 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #btn-close {
+            color: #e74c3c;
+            border-color: #faccc0;
+            margin-top: 20px;
+        }
+
+        .back-btn {
+            background-color: #ff7675;
+            color: white;
+            border: none;
+            margin-top: 20px;
+        }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -45,18 +80,19 @@
     <div id="function-menu" class="hidden">
         <button id="btn-calc" onclick="sendData('function1')">Рахувати показники 📊</button>
         <button id="btn-search" onclick="sendData('function2')">Шукати проблеми 🔍</button>
-        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button id="btn-back-func" class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <div id="lang-menu" class="hidden">
         <button id="btn-ua" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
         <button id="btn-en" onclick="selectLanguage('en')">English 🇺🇸</button>
-        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button id="btn-back-lang" class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
+        tg.ready();
 
         const translations = {
             'ua': {
@@ -67,7 +103,9 @@
                 'btn-calc': 'Рахувати показники 📊',
                 'btn-search': 'Шукати проблеми 🔍',
                 'btn-ua': 'Українська 🇺🇦 ✅',
-                'btn-en': 'English 🇺🇸'
+                'btn-en': 'English 🇺🇸',
+                'btn-back-func': 'НАЗАД ⬅️',
+                'btn-back-lang': 'НАЗАД ⬅️'
             },
             'en': {
                 'header-title': 'Helper for BAS v1.0',
@@ -77,38 +115,41 @@
                 'btn-calc': 'Calculate metrics 📊',
                 'btn-search': 'Search problems 🔍',
                 'btn-ua': 'Ukrainian 🇺🇦',
-                'btn-en': 'English 🇺🇸 ✅'
+                'btn-en': 'English 🇺🇸 ✅',
+                'btn-back-func': 'BACK ⬅️',
+                'btn-back-lang': 'BACK ⬅️'
             }
         };
 
         function showMenu(menuId) {
-            const menus = ['main-menu', 'function-menu', 'lang-menu'];
-            menus.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    id === menuId ? element.classList.remove('hidden') : element.classList.add('hidden');
-                }
-            });
+            // Приховуємо всі меню
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('function-menu').classList.add('hidden');
+            document.getElementById('lang-menu').classList.add('hidden');
+            
+            // Показуємо потрібне
+            document.getElementById(menuId).classList.remove('hidden');
         }
 
-        // --- ПРАВИЛЬНА ЛОГІКА МОВИ (БЕЗ ВИЛЬОТУ) ---
         function selectLanguage(langCode) {
             const langData = translations[langCode];
+            // Миттєве оновлення всіх текстів
             for (let id in langData) {
-                let element = document.getElementById(id);
-                if (element) {
-                    element.innerText = langData[id];
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = langData[id];
                 }
             }
-            // МИ НЕ ПИШЕМО tg.sendData ТУТ, тому вікно НЕ закриється!
-            console.log("Language changed to: " + langCode);
+            // НЕ використовуємо tg.sendData, щоб вікно не закривалося
+            console.log("Мова змінена на: " + langCode);
         }
 
-        // --- ПРАВИЛЬНА ЛОГІКА ФУНКЦІЙ (З ВИЛЬОТОМ) ---
         function sendData(text) {
-            tg.sendData(text); // Відправляємо боту (function1 або function2)
-            tg.close();        // Закриваємо вікно
+            tg.sendData(text);
+            tg.close();
         }
     </script>
+</body>
+</html>
 </body>
 </html>
