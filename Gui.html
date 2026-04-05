@@ -10,41 +10,52 @@
             cursor: pointer; width: 80%; transition: 0.3s;
         }
         button:active { background-color: #2980b9; transform: scale(0.98); }
-        .hidden { display: none; } /* Клас для приховування елементів */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <h3>Helper for BAS v1.0</h3>
     
     <div id="main-menu">
-        <button onclick="showMenu('function-menu')">Функції</button>
+        <button onclick="showMenu('function-menu')">Функції 🛠️</button>
         <button onclick="showMenu('lang-menu')">МОВА 🌍</button>
-        <button onclick="tg.close()">Закрити</button>
+        <button onclick="tg.close()">Закрити ❌</button>
     </div>
 
     <div id="function-menu" class="hidden">
-        <button onclick="sendData('function1')">Рахувати фінансові показники</button>
-        <button onclick="sendData('function2')">Шукати проблеми в файлі</button>
+        <button onclick="sendData('function1')">Рахувати показники 📊</button>
+        <button onclick="sendData('function2')">Шукати проблеми 🔍</button>
         <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
+
+    <div id="lang-menu" class="hidden">
+        <button onclick="sendData('set_ua')">Українська 🇺🇦</button>
+        <button onclick="sendData('set_en')">English 🇺🇸</button>
+        <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Функція для перемикання між екранами (МОВА <-> НАЗАД)
         function showMenu(menuId) {
-            // Приховуємо всі меню
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('lang-menu').classList.add('hidden');
+            // Списки всіх твоїх ID меню
+            const menus = ['main-menu', 'function-menu', 'lang-menu'];
             
-            // Показуємо потрібне
-            document.getElementById(menuId).classList.remove('hidden');
+            menus.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (id === menuId) {
+                        element.classList.remove('hidden');
+                    } else {
+                        element.classList.add('hidden');
+                    }
+                }
+            });
         }
 
-        // Функція відправки даних боту
         function sendData(text) {
             tg.sendData(text);
-            // Ми НЕ закриваємо вікно тут, щоб користувач бачив результат у чаті
         }
     </script>
 </body>
