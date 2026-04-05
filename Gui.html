@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,6 +8,7 @@
     <script src="languages.js"></script>
     
     <style>
+        /* ЗАГАЛЬНИЙ СТИЛЬ */
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
             background-attachment: fixed; color: #333; text-align: center; 
@@ -15,29 +16,42 @@
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        #header-title { margin-bottom: 25px; font-weight: 600; font-size: 24px; color: #2c3e50; }
-        .version-tag { position: fixed; left: 15px; bottom: 10px; font-size: 10px; color: rgba(0,0,0,0.2); }
+        #header-title { margin-bottom: 25px; font-weight: 600; font-size: 24px; color: #2c3e50; transition: 0.4s; }
+        .version-tag { position: fixed; left: 15px; bottom: 10px; font-size: 10px; color: rgba(0,0,0,0.2); pointer-events: none; }
 
+        /* БАЗОВИЙ СТИЛЬ КНОПОК */
         button { 
             background-color: white; color: #444; border: 1px solid #ddd; padding: 16px 20px; 
             margin: 8px 0; border-radius: 18px; font-size: 17px; font-weight: 500; cursor: pointer; 
             width: 90%; max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            outline: none;
         }
 
-        /* --- ЕФЕКТИ HOVER --- */
+        /* АНІМАЦІЯ ПЕРЕЛИВАННЯ */
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
+        /* --- ЕФЕКТИ НАВЕДЕННЯ (HOVER) --- */
+
+        /* Калькулятор та кнопка дії - Зелений */
         #btn-calc-main:hover, #action-button:hover {
             background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
             color: white !important; transform: translateY(-5px) scale(1.03);
             box-shadow: 0 10px 20px rgba(46, 204, 113, 0.4); border: none !important;
         }
 
+        /* Функції та під-кнопки функцій - Золотий */
+        #btn-func:hover, #btn-calc:hover, #btn-search:hover {
+            background: linear-gradient(45deg, #f1c40f, #f39c12) !important;
+            color: white !important; transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(243, 156, 18, 0.4); border: none !important;
+        }
+
+        /* Мова - Переливання (Червоний-Синій) */
         #btn-lang-menu:hover {
             background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
             background-size: 400% 400% !important; animation: gradientAnimation 3s ease infinite !important;
@@ -45,43 +59,35 @@
             box-shadow: 0 10px 25px rgba(44, 120, 254, 0.5); border: none !important;
         }
 
-        #btn-vat-tool:hover {
-            background: linear-gradient(45deg, #3498db, #2980b9) !important;
+        /* Закрити - Червоний */
+        #btn-close:hover {
+            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
             color: white !important; transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.4); border: none !important;
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.4); border: none !important;
         }
 
-        #btn-cash-tool:hover {
-            background: linear-gradient(45deg, #5d6d7e, #2c3e50) !important;
-            color: white !important; transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.4); border: none !important;
-        }
+        /* Кнопки ПДВ та Каса всередині калькулятора */
+        #btn-vat-tool:hover { background: linear-gradient(45deg, #3498db, #2980b9) !important; color: white !important; transform: translateY(-5px); box-shadow: 0 8px 15px rgba(52, 152, 219, 0.3); border: none !important; }
+        #btn-cash-tool:hover { background: linear-gradient(45deg, #5d6d7e, #2c3e50) !important; color: white !important; transform: translateY(-5px); box-shadow: 0 8px 15px rgba(44, 62, 80, 0.3); border: none !important; }
 
-        #lang-menu button:hover {
-            background-color: #ebf5ff !important; border-color: #3498db !important;
-            transform: translateY(-3px) scale(1.05);
-        }
+        /* Кнопки Назад та Відміна */
+        .back-btn:hover { background: #34495e !important; color: white !important; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        /* ІНТЕРФЕЙС */
+        /* ІНТЕРФЕЙС КАЛЬКУЛЯТОРА */
         #tool-interface {
             background: white; padding: 25px 20px; border-radius: 24px;
             width: 85%; max-width: 320px; margin-top: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.07);
         }
 
-        input {
-            width: 90%; padding: 14px; border: 2px solid #eee; border-radius: 12px;
-            font-size: 22px; margin-bottom: 15px; text-align: center; outline: none;
-        }
+        input { width: 90%; padding: 14px; border: 2px solid #eee; border-radius: 12px; font-size: 22px; margin-bottom: 15px; text-align: center; outline: none; transition: 0.3s; }
+        input:focus { border-color: #3498db; }
 
-        /* Стиль результату (тепер клікабельний) */
-        #calc-result {
-            font-size: 18px; color: #2c3e50; margin-bottom: 20px; padding: 10px;
-            background: #f8f9fa; border-radius: 12px; cursor: pointer;
-            transition: 0.3s; border: 1px dashed transparent;
+        #calc-result { 
+            font-size: 18px; color: #2c3e50; margin-bottom: 20px; padding: 12px;
+            background: #f8f9fa; border-radius: 12px; cursor: pointer; transition: 0.3s;
         }
         #calc-result:active { background: #e8f5e9; transform: scale(0.98); }
         #calc-result b { color: #27ae60; font-size: 20px; }
-
         .copy-hint { font-size: 10px; color: #95a5a6; display: block; margin-top: 5px; }
 
         .hidden { display: none !important; }
@@ -89,7 +95,7 @@
 </head>
 <body>
     <h2 id="header-title">Helper for BAS</h2>
-    <div class="version-tag">v1.2</div>
+    <div class="version-tag">v1.2.1</div>
     
     <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
     <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
@@ -121,6 +127,7 @@
 
     <div id="function-menu" class="hidden">
         <button id="btn-calc" onclick="processGeneric()">Рахувати показники 📊</button>
+        <button id="btn-search" onclick="processGeneric()">Шукати проблеми 🔍</button>
         <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -169,7 +176,7 @@
             playSound('success-sound');
             const vat = (val * 0.20).toFixed(2);
             lastResult = vat;
-            document.getElementById('result-text').innerHTML = `ПДВ: <b>${vat}</b><br><span class="copy-hint">(Натисни, щоб скопіювати цифру)</span>`;
+            document.getElementById('result-text').innerHTML = `ПДВ: <b>${vat}</b><br><span class="copy-hint">(Натисни, щоб скопіювати)</span>`;
         }
 
         function calculateCash() {
@@ -178,10 +185,9 @@
             playSound('success-sound');
             const net = (val - (val * 0.01)).toFixed(2);
             lastResult = net;
-            document.getElementById('result-text').innerHTML = `До каси: <b>${net}</b><br><span class="copy-hint">(Натисни, щоб скопіювати цифру)</span>`;
+            document.getElementById('result-text').innerHTML = `До каси: <b>${net}</b><br><span class="copy-hint">(Натисни, щоб скопіювати)</span>`;
         }
 
-        // ФУНКЦІЯ КОПІЮВАННЯ
         function copyResult() {
             if (!lastResult) return;
             navigator.clipboard.writeText(lastResult).then(() => {
