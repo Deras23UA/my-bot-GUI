@@ -11,9 +11,9 @@ const translations = {
         'btn-calc': 'Рахувати показники 📊',
         'btn-search': 'Шукати проблеми 🔍',
         'action-button': 'Порахувати',
-        'btn-back-calc': 'НАЗАД ⬅️',
+        'simple-hint': 'Приклад + Enter (напр. 500*1.2)',
         'calc-wait': 'Введіть суму',
-        'simple-hint': 'Введіть приклад (напр. 2+2*2) та Enter'
+        'simple-result': 'Результат'
     },
     'en': {
         'header-title': 'Helper for BAS',
@@ -27,9 +27,9 @@ const translations = {
         'btn-calc': 'Calculate metrics 📊',
         'btn-search': 'Search issues 🔍',
         'action-button': 'Calculate',
-        'btn-back-calc': 'BACK ⬅️',
+        'simple-hint': 'Expression + Enter (e.g. 500*1.2)',
         'calc-wait': 'Enter amount',
-        'simple-hint': 'Enter expression (e.g. 2+2*2) and Enter'
+        'simple-result': 'Result'
     },
     'de': {
         'header-title': 'BAS Helfer',
@@ -43,9 +43,9 @@ const translations = {
         'btn-calc': 'Metriken berechnen 📊',
         'btn-search': 'Fehler suchen 🔍',
         'action-button': 'Berechnen',
-        'btn-back-calc': 'ZURÜCK ⬅️',
+        'simple-hint': 'Beispiel + Enter (z.B. 500*1.2)',
         'calc-wait': 'Betrag eingeben',
-        'simple-hint': 'Beispiel eingeben (z.B. 2+2*2) і Enter'
+        'simple-result': 'Ergebnis'
     },
     'pl': {
         'header-title': 'Pomocnik BAS',
@@ -59,8 +59,8 @@ const translations = {
         'btn-calc': 'Oblicz wskaźniki 📊',
         'btn-search': 'Szukaj problemów 🔍',
         'action-button': 'Oblicz',
-        'btn-back-calc': 'POWRÓT ⬅️',
+        'simple-hint': 'Przykład + Enter (np. 500*1.2)',
         'calc-wait': 'Wpisz kwotę',
-        'simple-hint': 'Wpisz przykład (np. 2+2*2) i Enter'
+        'simple-result': 'Wynik'
     }
 };
