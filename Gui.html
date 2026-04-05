@@ -61,26 +61,65 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        function showMenu(menuId) {
-            // Отримуємо всі блоки меню
-            const mainMenu = document.getElementById('main-menu');
-            const funcMenu = document.getElementById('function-menu');
-            const langMenu = document.getElementById('lang-menu');
-
-            // Спочатку ховаємо абсолютно все
-            mainMenu.classList.add('hidden');
-            if(funcMenu) funcMenu.classList.add('hidden');
-            if(langMenu) langMenu.classList.add('hidden');
-
-            // Показуємо тільки те, що натиснули
-            const targetMenu = document.getElementById(menuId);
-            if (targetMenu) {
-                targetMenu.classList.remove('hidden');
-            } else {
-                // Якщо раптом меню не знайшлося, повертаємо головне, щоб не було пусто
-                mainMenu.classList.remove('hidden');
+        // 1. Словник перекладів (вставляємо сюди)
+        const translations = {
+            'ua': {
+                'header-title': 'Помічник для BAS v1.0',
+                'btn-func': 'Функції 🛠️',
+                'btn-lang-menu': 'МОВА 🌍',
+                'btn-close': 'Закрити ❌',
+                'btn-ua': 'Українська 🇺🇦 ✅',
+                'btn-en': 'English 🇺🇸'
+            },
+            'en': {
+                'header-title': 'Helper for BAS v1.0',
+                'btn-func': 'Functions 🛠️',
+                'btn-lang-menu': 'LANGUAGE 🌍',
+                'btn-close': 'Close ❌',
+                'btn-ua': 'Ukrainian 🇺🇦',
+                'btn-en': 'English 🇺🇸 ✅'
             }
+        };
+
+        // 2. Функція перемикання екранів (залишаємо)
+        function showMenu(menuId) {
+            const menus = ['main-menu', 'function-menu', 'lang-menu'];
+            menus.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    id === menuId ? element.classList.remove('hidden') : element.classList.add('hidden');
+                }
+            });
         }
+
+        // 3. НОВА функція вибору мови з перекладом
+        function selectLanguage(langCode) {
+            // Відправляємо дані боту в Python
+            tg.sendData('set_' + langCode);
+
+            // Отримуємо переклади для обраної мови
+            const langData = translations[langCode];
+            
+            // Пробігаємося по всіх ID і міняємо текст
+            for (let id in langData) {
+                let element = document.getElementById(id);
+                if (element) {
+                    element.innerText = langData[id];
+                }
+            }
+
+            // Закриваємо через паузу, щоб юзер побачив галочку ✅
+            setTimeout(() => {
+                tg.close();
+            }, 600);
+        }
+
+        function sendData(text) {
+            tg.sendData(text);
+        }
+    </script>
+</body>
+</html>
 
         function sendData(text) {
             tg.sendData(text);
