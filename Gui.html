@@ -1,12 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="uk">
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Deras Helper GUI v1.0</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* ТЕМНІ СТИЛІ ТА ВЕЛИКІ КНОПКИ */
+        /* ТЕМНІ СТИЛІ */
         body { 
             background: #0f0f13; color: #ffffff; text-align: center; 
             font-family: 'Segoe UI', Roboto, sans-serif; padding-top: 30px; 
@@ -17,20 +19,59 @@
 
         .btn-container { width: 95%; max-width: 450px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
+        /* ОНОВЛЕНА КНОПКА З ЕФЕКТОМ ЗАПОВНЕННЯ */
         .menu-btn { 
-            background: linear-gradient(135deg, #1e1e26, #2a2a35); color: white; 
-            border: 1px solid #333; padding: 22px 20px; border-radius: 18px; 
-            font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.3s ease;
-            text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: center; align-items: center;
+            position: relative;
+            background: #1e1e26; 
+            color: white; 
+            border: 1px solid #333; 
+            padding: 22px 20px; 
+            border-radius: 18px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+            transition: all 0.4s ease;
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            overflow: hidden; /* Щоб фон не виходив за межі */
+            z-index: 1;
         }
 
-        .menu-btn:hover { transform: translateY(-3px); border-color: #00ff88; }
+        /* Псевдоелемент для кольорової лінії, що розширюється */
+        .menu-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px; /* Початкова товщина лінії зліва */
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        /* ЕФЕКТ ПРИ НАВЕДЕННІ (HOVER) */
+        .menu-btn:hover::before {
+            width: 100%; /* Лінія розширюється на всю кнопку */
+        }
+
+        .menu-btn:hover {
+            color: #000; /* Текст стає чорним для контрасту */
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
         .menu-btn:active { transform: scale(0.98); }
 
-        #btn-calc-main { border-left: 6px solid #2ecc71; }
-        #btn-func { border-left: 6px solid #f1c40f; }
-        #btn-close { border-left: 6px solid #e74c3c; }
+        /* КОЛЬОРИ ДЛЯ КОЖНОЇ КНОПКИ */
+        #btn-calc-main::before { background: #2ecc71; } /* Зелений для Фінансів */
+        #btn-func::before { background: #f1c40f; }      /* Жовтий для Функцій */
+        #btn-lang-menu::before { background: #3498db; } /* Синій для Мови */
+        #btn-close::before { background: #e74c3c; }     /* Червоний для Закрити */
 
         .back-btn-style {
             background: #24272e !important; border: 1px solid #40444b !important;
@@ -46,7 +87,7 @@
     <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
 
     <div id="main-menu" class="btn-container">
-        <button class="menu-btn" id="btn-calc-main" onclick="showMenu('calc-menu')">КАЛЬКУЛЯТОР 🧮</button>
+        <button class="menu-btn" id="btn-calc-main" onclick="showMenu('calc-menu')">ФІНАНСИ 💸</button>
         <button class="menu-btn" id="btn-func" onclick="showMenu('function-menu')">Функції BAS 🛠️</button>
         <button class="menu-btn" id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
         <button class="menu-btn" id="btn-close" onclick="tg.close()">Закрити ❌</button>
@@ -62,7 +103,7 @@
 
     <div id="function-menu" class="hidden btn-container">
         <button class="menu-btn" id="btn-calc-metrics" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
-        <button class="menu-btn" id="btn-stop-all" style="border-left:6px solid #ff4444" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
+        <button class="menu-btn" id="btn-stop-all" style="position:relative;" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
         <button class="menu-btn back-btn-style" id="btn-back-func" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -71,65 +112,24 @@
         tg.expand();
 
         const translations = {
-            ua: {
-                title: "DERAS HELPER v1.0",
-                calc: "КАЛЬКУЛЯТОР 🧮",
-                func: "Функції BAS 🛠️",
-                lang: "МОВА 🌍",
-                close: "Закрити ❌",
-                back: "НАЗАД ⬅️",
-                metrics: "Рахувати показники 📊",
-                stop: "ЗУПИНИТИ ВСЕ 🛑"
-            },
-            en: {
-                title: "DERAS HELPER v1.0",
-                calc: "CALCULATOR 🧮",
-                func: "BAS FUNCTIONS 🛠️",
-                lang: "LANGUAGE 🌍",
-                close: "Close ❌",
-                back: "BACK ⬅️",
-                metrics: "Calculate metrics 📊",
-                stop: "STOP ALL 🛑"
-            },
-            pl: {
-                title: "DERAS HELPER v1.0",
-                calc: "KALKULATOR 🧮",
-                func: "FUNKCJE BAS 🛠️",
-                lang: "JĘZYK 🌍",
-                close: "Zamknij ❌",
-                back: "POWRÓT ⬅️",
-                metrics: "Oblicz wskaźники 📊",
-                stop: "ZATRZYMAJ WSZYSTKO 🛑"
-            },
-            de: {
-                title: "DERAS HELPER v1.0",
-                calc: "RECHNER 🧮",
-                func: "BAS FUNKTIONEN 🛠️",
-                lang: "SPRACHE 🌍",
-                close: "Schließen ❌",
-                back: "ZURÜCK ⬅️",
-                metrics: "Metriken berechnen 📊",
-                stop: "ALLES STOPPEN 🛑"
-            }
+            ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️", metrics: "Рахувати показники 📊", stop: "ЗУПИНИТИ ВСЕ 🛑" },
+            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️", metrics: "Calculate metrics 📊", stop: "STOP ALL 🛑" },
+            pl: { title: "DERAS HELPER v1.0", calc: "FINANSE 💸", func: "FUNKCJE BAS 🛠️", lang: "JĘZYK 🌍", close: "Zamknij ❌", back: "POWRÓT ⬅️", metrics: "Oblicz wskaźники 📊", stop: "ZATRZYMAJ WSZYSTKO 🛑" },
+            de: { title: "DERAS HELPER v1.0", calc: "FINANZEN 💸", func: "BAS FUNKTIONEN 🛠️", lang: "SPRACHE 🌍", close: "Schließen ❌", back: "ZURÜCK ⬅️", metrics: "Metriken berechnen 📊", stop: "ALLES STOPPEN 🛑" }
         };
 
         function selectLanguage(lang) {
             const t = translations[lang];
-            
-            // Оновлюємо тексти на кнопках
             document.getElementById('ui-title').innerText = t.title;
             document.getElementById('btn-calc-main').innerText = t.calc;
             document.getElementById('btn-func').innerText = t.func;
             document.getElementById('btn-lang-menu').innerText = t.lang;
             document.getElementById('btn-close').innerText = t.close;
             document.getElementById('btn-calc-metrics').innerText = t.metrics;
-            document.getElementById('btn-stop-all').innerText = t.stop;
-            
-            // Оновлюємо кнопки "НАЗАД"
             document.querySelectorAll('.back-btn-style').forEach(btn => btn.innerText = t.back);
 
             playSound('click-sound');
-            showMenu('main-menu'); // Повертаємо в головне меню вже перекладеним
+            showMenu('main-menu');
         }
 
         function showMenu(id) {
