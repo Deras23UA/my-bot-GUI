@@ -5,15 +5,16 @@ const translations = {
         'btn-func': 'Функції 🛠️',
         'btn-lang-menu': 'МОВА 🌍',
         'btn-close': 'Закрити ❌',
+        'btn-simple-calc': 'Швидкий розрахунок 🔢',
+        'btn-vat-tool': 'Розрахунок ПДВ (20%) 💰',
+        'btn-acc-tool': 'Бухгалтерія (ПДВ) 📑',
+        'btn-cash-tool': 'Касовий звіт (-1%) 📝',
         'btn-calc': 'Рахувати показники 📊',
         'btn-search': 'Шукати проблеми 🔍',
-        'btn-vat-tool': 'Розрахунок ПДВ (20%) 💰',
-        'btn-cash-tool': 'Касовий звіт (-1%) 📝',
-        'btn-acc-tool': 'Бухгалтерія (ПДВ) 📑',
         'action-button': 'Порахувати',
         'btn-back-calc': 'НАЗАД ⬅️',
-        'btn-cancel-tool': 'ВІДМІНА',
-        'calc-wait': 'Введіть суму'
+        'calc-wait': 'Введіть суму',
+        'simple-hint': 'Введіть приклад (напр. 2+2*2) та Enter'
     },
     'en': {
         'header-title': 'Helper for BAS',
@@ -21,15 +22,16 @@ const translations = {
         'btn-func': 'Functions 🛠️',
         'btn-lang-menu': 'LANGUAGE 🌍',
         'btn-close': 'Close ❌',
+        'btn-simple-calc': 'Quick Calculation 🔢',
+        'btn-vat-tool': 'VAT Calculation (20%) 💰',
+        'btn-acc-tool': 'Accounting (VAT) 📑',
+        'btn-cash-tool': 'Cash Report (-1%) 📝',
         'btn-calc': 'Calculate metrics 📊',
         'btn-search': 'Search issues 🔍',
-        'btn-vat-tool': 'VAT Calculation (20%) 💰',
-        'btn-cash-tool': 'Cash Report (-1%) 📝',
-        'btn-acc-tool': 'Accounting (VAT) 📑',
         'action-button': 'Calculate',
         'btn-back-calc': 'BACK ⬅️',
-        'btn-cancel-tool': 'CANCEL',
-        'calc-wait': 'Enter amount'
+        'calc-wait': 'Enter amount',
+        'simple-hint': 'Enter expression (e.g. 2+2*2) and Enter'
     },
     'de': {
         'header-title': 'BAS Helfer',
@@ -37,15 +39,16 @@ const translations = {
         'btn-func': 'Funktionen 🛠️',
         'btn-lang-menu': 'SPRACHE 🌍',
         'btn-close': 'Schließen ❌',
+        'btn-simple-calc': 'Schnellrechner 🔢',
+        'btn-vat-tool': 'MwSt. Berechnung (20%) 💰',
+        'btn-acc-tool': 'Buchhaltung (MwSt) 📑',
+        'btn-cash-tool': 'Kassenbericht (-1%) 📝',
         'btn-calc': 'Metriken berechnen 📊',
         'btn-search': 'Fehler suchen 🔍',
-        'btn-vat-tool': 'MwSt. Berechnung (20%) 💰',
-        'btn-cash-tool': 'Kassenbericht (-1%) 📝',
-        'btn-acc-tool': 'Buchhaltung (MwSt) 📑',
         'action-button': 'Berechnen',
         'btn-back-calc': 'ZURÜCK ⬅️',
-        'btn-cancel-tool': 'ABBRECHEN',
-        'calc-wait': 'Betrag eingeben'
+        'calc-wait': 'Betrag eingeben',
+        'simple-hint': 'Beispiel eingeben (z.B. 2+2*2) і Enter'
     },
     'pl': {
         'header-title': 'Pomocnik BAS',
@@ -53,14 +56,15 @@ const translations = {
         'btn-func': 'Funkcje 🛠️',
         'btn-lang-menu': 'JĘZYK 🌍',
         'btn-close': 'Zamknij ❌',
+        'btn-simple-calc': 'Szybkie obliczenia 🔢',
+        'btn-vat-tool': 'Obliczanie VAT (20%) 💰',
+        'btn-acc-tool': 'Księgowość (VAT) 📑',
+        'btn-cash-tool': 'Raport kasowy (-1%) 📝',
         'btn-calc': 'Oblicz wskaźniki 📊',
         'btn-search': 'Szukaj problemów 🔍',
-        'btn-vat-tool': 'Obliczanie VAT (20%) 💰',
-        'btn-cash-tool': 'Raport kasowy (-1%) 📝',
-        'btn-acc-tool': 'Księgowość (VAT) 📑',
         'action-button': 'Oblicz',
         'btn-back-calc': 'POWRÓT ⬅️',
-        'btn-cancel-tool': 'ANULUJ',
-        'calc-wait': 'Wpisz kwotę'
+        'calc-wait': 'Wpisz kwotę',
+        'simple-hint': 'Wpisz przykład (np. 2+2*2) i Enter'
     }
 };
