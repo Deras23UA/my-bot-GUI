@@ -17,7 +17,6 @@
 
         .btn-container { width: 95%; max-width: 450px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
-        /* ОНОВЛЕНА КНОПКА З ЕФЕКТОМ ЗАПОВНЕННЯ */
         .menu-btn { 
             position: relative;
             background: #1e1e26; 
@@ -51,25 +50,15 @@
             z-index: -1;
         }
 
-        .menu-btn:hover::before {
-            width: 100%; 
-        }
-
-        .menu-btn:hover {
-            color: #000; 
-            border-color: transparent;
-            transform: translateY(-3px);
-        }
-
+        .menu-btn:hover::before { width: 100%; }
+        .menu-btn:hover { color: #000; border-color: transparent; transform: translateY(-3px); }
         .menu-btn:active { transform: scale(0.98); }
 
-        /* КОЛЬОРИ ДЛЯ ГОЛОВНОГО МЕНЮ */
         #btn-calc-main::before { background: #2ecc71; } 
         #btn-func::before { background: #f1c40f; }      
         #btn-lang-menu::before { background: #3498db; } 
         #btn-close::before { background: #e74c3c; }     
 
-        /* КОЛЬОРИ ДЛЯ ПІДМЕНЮ (ФІНАНСИ ТА ФУНКЦІЇ) */
         .sub-fin::before { background: #2ecc71; }
         .sub-func::before { background: #f1c40f; }
 
@@ -95,16 +84,16 @@
     </div>
 
     <div id="calc-menu" class="hidden btn-container">
-        <button class="menu-btn sub-fin" id="btn-fin-simple" onclick="sendTask('quick_calc')">Швидкий розрахунок 🔢</button>
-        <button class="menu-btn sub-fin" id="btn-fin-vat" onclick="sendTask('vat_20')">Розрахунок ПДВ (20%) 💰</button>
-        <button class="menu-btn sub-fin" id="btn-fin-acc" onclick="sendTask('accounting_vat')">Бухгалтерія (ПДВ) 📑</button>
+        <button class="menu-btn sub-fin" onclick="sendTask('quick_calc')">Швидкий розрахунок 🔢</button>
+        <button class="menu-btn sub-fin" onclick="sendTask('vat_20')">Розрахунок ПДВ (20%) 💰</button>
+        <button class="menu-btn sub-fin" onclick="sendTask('accounting_vat')">Бухгалтерія (ПДВ) 📑</button>
         <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <div id="function-menu" class="hidden btn-container">
-        <button class="menu-btn sub-func" id="btn-calc-metrics" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
-        <button class="menu-btn sub-func" id="btn-find-issues" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
-        <button class="menu-btn" id="btn-stop-all" style="position:relative; border-left: 6px solid #e74c3c;" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
+        <button class="menu-btn sub-func" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
+        <button class="menu-btn sub-func" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
+        <button class="menu-btn" id="btn-stop-all" style="border-left: 6px solid #e74c3c;" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
         <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -113,7 +102,7 @@
         <button class="menu-btn" onclick="selectLanguage('en')">English 🇺🇸</button>
         <button class="menu-btn" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
         <button class="menu-btn" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
-        <button class="menu-btn back-btn-style" id="btn-back-lang" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <script>
@@ -121,25 +110,19 @@
         tg.expand();
 
         const translations = {
-            ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️", metrics: "Рахувати показники 📊", issues: "Шукати проблеми 🔍", stop: "ЗУПИНИТИ ВСЕ 🛑" },
-            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️", metrics: "Calculate metrics 📊", issues: "Search issues 🔍", stop: "STOP ALL 🛑" },
-            pl: { title: "DERAS HELPER v1.0", calc: "FINANSE 💸", func: "FUNKCJE BAS 🛠️", lang: "JĘZYK 🌍", close: "Zamknij ❌", back: "POWRÓT ⬅️", metrics: "Oblicz wskaźники 📊", issues: "Szukaj problemów 🔍", stop: "ZATRZYMAJ WSZYSTKO 🛑" },
-            de: { title: "DERAS HELPER v1.0", calc: "FINANZEN 💸", func: "BAS FUNKTIONEN 🛠️", lang: "SPRACHE 🌍", close: "Schließen ❌", back: "ZURÜCK ⬅️", metrics: "Metriken berechnen 📊", issues: "Probleme suchen 🔍", stop: "ALLES STOPPEN 🛑" }
+            ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️" },
+            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️" }
+            // Можна додати інші мови сюди
         };
 
         function selectLanguage(lang) {
-            const t = translations[lang];
+            const t = translations[lang] || translations.ua;
             document.getElementById('ui-title').innerText = t.title;
             document.getElementById('btn-calc-main').innerText = t.calc;
             document.getElementById('btn-func').innerText = t.func;
             document.getElementById('btn-lang-menu').innerText = t.lang;
             document.getElementById('btn-close').innerText = t.close;
-            document.getElementById('btn-calc-metrics').innerText = t.metrics;
-            document.getElementById('btn-find-issues').innerText = t.issues;
-            document.getElementById('btn-stop-all').innerText = t.stop;
             document.querySelectorAll('.back-btn-style').forEach(btn => btn.innerText = t.back);
-
-            playSound('click-sound');
             showMenu('main-menu');
         }
 
@@ -154,10 +137,18 @@
             if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
         }
 
+        // ОНОВЛЕНА ФУНКЦІЯ: Щоб додаток не закривався
         function sendTask(action) {
-            // Тепер кнопки відправляють JSON рядок у Telegram
+            playSound('click-sound');
+            
+            // Якщо ти використовуєш локальний сервер для запису в users.json:
+            // fetch('/update_action', { method: 'POST', body: JSON.stringify({pending_action: action}) });
+
+            // Якщо ти використовуєш стандартний метод Telegram (він ЗАКРИЄ вікно):
             tg.sendData(JSON.stringify({action: action}));
-            setTimeout(() => tg.close(), 500);
+            
+            // Щоб дати користувачу побачити натискання перед закриттям
+            setTimeout(() => { tg.close(); }, 300);
         }
     </script>
 </body>
