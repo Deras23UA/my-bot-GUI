@@ -1,73 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background-color: #2c3e50; color: white; text-align: center; font-family: sans-serif; padding-top: 20px; }
-        button { 
-            background-color: #3498db; color: white; border: none; 
-            padding: 15px 30px; margin: 10px; border-radius: 10px; font-size: 18px;
-            cursor: pointer; width: 80%; transition: 0.3s;
+        /* Модернізація стилів: Білий фон і темно-сірий текст */
+        body { 
+            background-color: #f4f6f9; /* Дуже легкий сірий, приємніший за чистий білий */
+            color: #333; /* Темно-сірий текст */
+            text-align: center; 
+            font-family: 'Segoe UI', Roboto, sans-serif; /* Сучасні шрифти */
+            padding-top: 30px; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        button:active { background-color: #2980b9; transform: scale(0.98); }
-        .hidden { display: none !important; } /* Додав !important для надійності */
+
+        h3 {
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Кнопки (Модерні, сірі) */
+        button { 
+            background-color: #fff; /* Біла кнопка */
+            color: #555; /* Сірий текст на кнопці */
+            border: 1px solid #ddd; /* Дуже легка сіра рамка */
+            padding: 16px 30px; 
+            margin: 10px 0; 
+            border-radius: 12px; /* М'які кути */
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer; 
+            width: 90%; /* Майже на всю ширину */
+            max-width: 350px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05); /* Легка тінь */
+            transition: 0.2s ease-in-out; /* Плавна анімація */
+        }
+
+        /* Ефект при натисканні (робить кнопку темнішою) */
+        button:active { 
+            background-color: #f1f1f1; 
+            transform: scale(0.97); /* Ефект натискання */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Кнопки "Назад" (трохи інший відтінок) */
+        .back-btn {
+            background-color: #e67e22; /* Назад буде кольоровою, щоб її було видно */
+            color: white;
+            border: none;
+        }
+        .back-btn:active {
+            background-color: #d35400;
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <h3>Helper for BAS v1.0</h3>
+    <h3 id="header-title">Helper for BAS v1.0</h3>
     
     <div id="main-menu">
-        <button onclick="showMenu('function-menu')">Функції 🛠️</button>
-        <button onclick="showMenu('lang-menu')">МОВА 🌍</button>
-        <button onclick="tg.close()">Закрити ❌</button>
+        <button id="btn-func" onclick="showMenu('function-menu')">Функції 🛠️</button>
+        <button id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
+        <button id="btn-close" style="color: #e74c3c; border-color: #faccc0;" onclick="tg.close()">Закрити ❌</button>
     </div>
 
     <div id="function-menu" class="hidden">
-        <button onclick="sendData('function1')">Рахувати показники 📊</button>
-        <button onclick="sendData('function2')">Шукати проблеми 🔍</button>
-        <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+        <button id="btn-calc" onclick="sendData('function1')">Рахувати показники 📊</button>
+        <button id="btn-search" onclick="sendData('function2')">Шукати проблеми 🔍</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
     <div id="lang-menu" class="hidden">
-    <button id="btn-ua" onclick="selectLanguage('ua', 'Українська 🇺🇦 ✅')">Українська 🇺🇦</button>
-    <button id="btn-en" onclick="selectLanguage('en', 'English 🇺🇸 ✅')">English 🇺🇸</button>
-    <button onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
-</div>
-
-<script>
-    function selectLanguage(langCode, newText) {
-        // 1. Відправляємо дані боту (як і раніше)
-        // Використовуємо 'set_ua' або 'set_en'
-        tg.sendData('set_' + langCode);
-
-        // 2. Міняємо текст кнопки
-        if (langCode === 'ua') {
-            document.getElementById('btn-ua').innerText = newText;
-            document.getElementById('btn-en').innerText = 'English 🇺🇸'; // Скидаємо іншу кнопку
-        } else {
-            document.getElementById('btn-en').innerText = newText;
-            document.getElementById('btn-ua').innerText = 'Українська 🇺🇦'; // Скидаємо іншу кнопку
-        }
-
-        // 3. (Опціонально) Можна додати затримку перед закриттям, 
-        // щоб користувач встиг побачити галочку
-        setTimeout(() => {
-            tg.close();
-        }, 500); 
-    }
-</script>
+        <button id="btn-ua" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
+        <button id="btn-en" onclick="selectLanguage('en')">English 🇺🇸</button>
+        <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // 1. Словник перекладів (вставляємо сюди)
+        // Словник перекладів
         const translations = {
             'ua': {
                 'header-title': 'Помічник для BAS v1.0',
                 'btn-func': 'Функції 🛠️',
                 'btn-lang-menu': 'МОВА 🌍',
-                'btn-close': 'Закрити ❌',
+                'btn-calc': 'Рахувати показники 📊',
+                'btn-search': 'Шукати проблеми 🔍',
                 'btn-ua': 'Українська 🇺🇦 ✅',
                 'btn-en': 'English 🇺🇸'
             },
@@ -75,13 +100,13 @@
                 'header-title': 'Helper for BAS v1.0',
                 'btn-func': 'Functions 🛠️',
                 'btn-lang-menu': 'LANGUAGE 🌍',
-                'btn-close': 'Close ❌',
+                'btn-calc': 'Calculate metrics 📊',
+                'btn-search': 'Search problems 🔍',
                 'btn-ua': 'Ukrainian 🇺🇦',
                 'btn-en': 'English 🇺🇸 ✅'
             }
         };
 
-        // 2. Функція перемикання екранів (залишаємо)
         function showMenu(menuId) {
             const menus = ['main-menu', 'function-menu', 'lang-menu'];
             menus.forEach(id => {
@@ -92,37 +117,19 @@
             });
         }
 
-        // 3. НОВА функція вибору мови з перекладом
         function selectLanguage(langCode) {
-            // Відправляємо дані боту в Python
             tg.sendData('set_' + langCode);
-
-            // Отримуємо переклади для обраної мови
             const langData = translations[langCode];
-            
-            // Пробігаємося по всіх ID і міняємо текст
             for (let id in langData) {
                 let element = document.getElementById(id);
-                if (element) {
-                    element.innerText = langData[id];
-                }
+                if (element) { element.innerText = langData[id]; }
             }
-
-            // Закриваємо через паузу, щоб юзер побачив галочку ✅
-            setTimeout(() => {
-                tg.close();
-            }, 600);
+            setTimeout(() => { tg.close(); }, 600);
         }
 
         function sendData(text) {
             tg.sendData(text);
-        }
-    </script>
-</body>
-</html>
-
-        function sendData(text) {
-            tg.sendData(text);
+            tg.close();
         }
     </script>
 </body>
