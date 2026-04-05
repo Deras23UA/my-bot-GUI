@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="languages.js"></script>
+    
     <style>
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #ffdfdf 100%);
@@ -37,6 +39,9 @@
 <body>
     <h3 id="header-title">Helper for BAS v1.0</h3>
     
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+    <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+
     <div id="main-menu">
         <button id="btn-func" onclick="showMenu('function-menu')">Функції 🛠️</button>
         <button id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
@@ -52,6 +57,8 @@
     <div id="lang-menu" class="hidden">
         <button id="btn-ua" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
         <button id="btn-en" onclick="selectLanguage('en')">English 🇺🇸</button>
+        <button id="btn-de" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
+        <button id="btn-pl" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
         <button id="btn-back-lang" class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
     </div>
 
@@ -62,36 +69,15 @@
 
         let currentLang = 'ua';
 
-        const translations = {
-            'ua': {
-                'header-title': 'Помічник для BAS v1.0',
-                'btn-func': 'Функції 🛠️',
-                'btn-lang-menu': 'МОВА 🌍',
-                'btn-close': 'Закрити ❌',
-                'btn-calc': 'Рахувати показники 📊',
-                'btn-search': 'Шукати проблеми 🔍',
-                'btn-ua': 'Українська 🇺🇦 ✅',
-                'btn-en': 'English 🇺🇸',
-                'btn-back-func': 'НАЗАД ⬅️',
-                'btn-back-lang': 'НАЗАД ⬅️',
-                'loading': '⏳ Обробка...'
-            },
-            'en': {
-                'header-title': 'Helper for BAS v1.0',
-                'btn-func': 'Functions 🛠️',
-                'btn-lang-menu': 'LANGUAGE 🌍',
-                'btn-close': 'Close ❌',
-                'btn-calc': 'Calculate metrics 📊',
-                'btn-search': 'Search problems 🔍',
-                'btn-ua': 'Ukrainian 🇺🇦',
-                'btn-en': 'English 🇺🇸 ✅',
-                'btn-back-func': 'BACK ⬅️',
-                'btn-back-lang': 'BACK ⬅️',
-                'loading': '⏳ Processing...'
-            }
-        };
+        // Функція для звуку
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            sound.currentTime = 0;
+            sound.play();
+        }
 
         function showMenu(menuId) {
+            playSound('click-sound');
             document.getElementById('main-menu').classList.add('hidden');
             document.getElementById('function-menu').classList.add('hidden');
             document.getElementById('lang-menu').classList.add('hidden');
@@ -99,33 +85,32 @@
         }
 
         function selectLanguage(langCode) {
+            playSound('click-sound');
             currentLang = langCode;
-            const langData = translations[langCode];
+            const langData = translations[langCode]; // Беремо дані з зовнішнього файлу languages.js
             for (let id in langData) {
                 const el = document.getElementById(id);
                 if (el) el.innerText = langData[id];
             }
         }
 
-        // --- НОВА ФУНКЦІЯ ОБРОБКИ (БЕЗ ВИЛЬОТУ) ---
         function processFunction(btnId, actionName) {
+            playSound('click-sound');
             const btn = document.getElementById(btnId);
             const originalText = btn.innerText;
             
-            // 1. Показуємо статус завантаження на кнопці
             btn.innerText = translations[currentLang]['loading'];
             btn.style.opacity = "0.7";
             btn.disabled = true;
 
-            // 2. Імітуємо роботу (наприклад, 1.5 секунди)
             setTimeout(() => {
+                playSound('success-sound'); // Звук завершення
                 btn.innerText = originalText;
                 btn.style.opacity = "1";
                 btn.disabled = false;
                 
-                // Можна змінити заголовок на короткий час
                 const header = document.getElementById('header-title');
-                header.innerText = (currentLang === 'ua') ? "✅ Готово!" : "✅ Done!";
+                header.innerText = translations[currentLang]['done'];
                 header.style.color = "#27ae60";
 
                 setTimeout(() => {
