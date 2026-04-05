@@ -119,13 +119,35 @@
     box-shadow: 0 6px 15px rgba(243, 156, 18, 0.3);
 }
 
-/* Ефект для Мови */
+/* 1. СТВОРЮЄМО АНІМАЦІЮ "ПЕРЕЛИВАННЯ" (додай це в кінець <style>) */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }   /* Початок: червоний */
+    50% { background-position: 100% 50%; } /* Середина: синій */
+    100% { background-position: 0% 50%; }  /* Кінець: знову червоний */
+}
+
+/* 2. ОНОВЛЕНИЙ ЕФЕКТ ДЛЯ МОВИ (знайди стару '#btn-lang-menu:hover' і заміни) */
 #btn-lang-menu:hover {
-    background-color: #8e44ad !important; /* Фіолетовий */
+    /* Робимо градієнт завеликим, щоб було куди переливатися */
+    background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important;
+    background-size: 400% 400% !important; /* Розмір градієнта в 4 рази більше кнопки */
+    
     color: white !important;
-    border-color: #7d3c98;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(142, 68, 173, 0.3);
+    border: none !important; /* Прибираємо рамку, щоб не заважала */
+    
+    /* Піднімаємо кнопку (залишаємо приємний ефект) */
+    transform: translateY(-4px) scale(1.02); 
+    
+    /* Запускаємо анімацію: назва, час (4с), м'якість (ease), нескінченно (infinite) */
+    animation: gradientAnimation 4s ease infinite !important;
+    
+    /* Додаємо кольорове світіння */
+    box-shadow: 0 8px 20px rgba(44, 120, 254, 0.4);
+}
+
+/* Переконайтеся, що transition плавним (якщо ще немає) */
+button {
+    transition: all 0.3s ease !important;
 }
 
 /* Ефект для Закрити */
