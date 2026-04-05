@@ -5,72 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* НОВИЙ СТИЛЬ: Градієнтний фон (від білого до ніжно-червоного) */
         body { 
             background: linear-gradient(135deg, #ffffff 0%, #ffdfdf 100%);
-            background-attachment: fixed; /* Фон не рухається при скролі */
-            color: #333; /* Темно-сірий текст для контрасту */
+            background-attachment: fixed;
+            color: #333;
             text-align: center; 
-            font-family: 'Segoe UI', Roboto, sans-serif; /* Сучасні шрифти */
+            font-family: 'Segoe UI', Roboto, sans-serif;
             padding-top: 30px; 
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh; /* Щоб градієнт був на весь екран */
+            min-height: 100vh;
         }
-
-        h3 {
-            margin-bottom: 25px;
-            font-weight: 600;
-            color: #444;
-        }
-
-        /* Кнопки (Модерні, світлі) */
+        h3 { margin-bottom: 25px; font-weight: 600; color: #444; }
         button { 
-            background-color: rgba(255, 255, 255, 0.9); /* Напівпрозора біла кнопка */
-            color: #555; /* Сірий текст на кнопці */
-            border: 1px solid #ddd; /* Дуже легка сіра рамка */
-            padding: 16px 30px; 
-            margin: 10px 0; 
-            border-radius: 15px; /* Більш м'які кути */
-            font-size: 17px;
-            font-weight: 500;
-            cursor: pointer; 
-            width: 90%; /* Майже на всю ширину */
-            max-width: 350px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Легка тінь для об'єму */
-            transition: 0.3s ease; /* Плавна анімація */
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #555; border: 1px solid #ddd; padding: 16px 30px; 
+            margin: 10px 0; border-radius: 15px; font-size: 17px;
+            font-weight: 500; cursor: pointer; width: 90%; 
+            max-width: 350px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: 0.3s ease;
         }
-
-        /* Ефект при натисканні (зміна кольору) */
-        button:active { 
-            background-color: #f1f1f1; 
-            transform: scale(0.96); /* Ефект натискання */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* Особливий стиль для кнопки 'Закрити' */
-        #btn-close {
-            color: #e74c3c; /* Червоний текст */
-            border-color: #faccc0; /* Ніжно-червона рамка */
-            background-color: rgba(255, 235, 235, 0.9);
-        }
-        #btn-close:active {
-            background-color: #fcdbd3;
-        }
-
-        /* Кнопки "Назад" */
-        .back-btn {
-            background-color: #ff7675; /* Кольорова кнопка */
-            color: white;
-            border: none;
-            margin-top: 20px;
-        }
-        .back-btn:active {
-            background-color: #e17055;
-        }
-
+        button:active { background-color: #f1f1f1; transform: scale(0.96); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        #btn-close { color: #e74c3c; border-color: #faccc0; background-color: rgba(255, 235, 235, 0.9); }
+        .back-btn { background-color: #ff7675; color: white; border: none; margin-top: 20px; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -96,11 +55,9 @@
     </div>
 
     <script>
-        // Ініціалізація Telegram Web App
         let tg = window.Telegram.WebApp;
-        tg.expand(); // Розгорнути на весь екран
+        tg.expand();
 
-        // Словник перекладів (додав ID для всіх кнопок)
         const translations = {
             'ua': {
                 'header-title': 'Помічник для BAS v1.0',
@@ -124,24 +81,18 @@
             }
         };
 
-        // Функція перемикання екранів
         function showMenu(menuId) {
             const menus = ['main-menu', 'function-menu', 'lang-menu'];
             menus.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    if (id === menuId) {
-                        element.classList.remove('hidden');
-                    } else {
-                        element.classList.add('hidden');
-                    }
+                    id === menuId ? element.classList.remove('hidden') : element.classList.add('hidden');
                 }
             });
         }
 
-        // --- ВИПРАВЛЕНА ЛОГІКА ВИБОРУ МОВИ ---
+        // --- ПРАВИЛЬНА ЛОГІКА МОВИ (БЕЗ ВИЛЬОТУ) ---
         function selectLanguage(langCode) {
-            // 1. СПОЧАТКУ міняємо тексти в самому додатку (словник)
             const langData = translations[langCode];
             for (let id in langData) {
                 let element = document.getElementById(id);
@@ -149,20 +100,14 @@
                     element.innerText = langData[id];
                 }
             }
-
-            // 2. Тепер відправляємо дані боту (set_ua або set_en)
-            tg.sendData('set_' + langCode);
-
-            // 3. Закриваємо через паузу, щоб користувач встиг побачити "✅"
-            setTimeout(() => {
-                tg.close();
-            }, 800);
+            // МИ НЕ ПИШЕМО tg.sendData ТУТ, тому вікно НЕ закриється!
+            console.log("Language changed to: " + langCode);
         }
 
-        // Звичайна відправка даних для функцій
+        // --- ПРАВИЛЬНА ЛОГІКА ФУНКЦІЙ (З ВИЛЬОТОМ) ---
         function sendData(text) {
-            tg.sendData(text);
-            tg.close();
+            tg.sendData(text); // Відправляємо боту (function1 або function2)
+            tg.close();        // Закриваємо вікно
         }
     </script>
 </body>
