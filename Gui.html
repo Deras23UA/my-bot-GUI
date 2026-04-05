@@ -19,50 +19,37 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
 
-        /* --- БАЗОВІ АНІМАЦІЇ --- */
-        @keyframes gradientAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* АНІМАЦІЇ */
+        @keyframes gradientBtn { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* Кнопки Головного Меню */
-        #btn-calc-main:hover, #action-button:hover { background: linear-gradient(45deg, #2ecc71, #27ae60) !important; color: white !important; transform: translateY(-5px) scale(1.03); border: none !important; }
-        #btn-func:hover, #btn-calc:hover, #btn-search:hover { background: linear-gradient(45deg, #f1c40f, #f39c12) !important; color: white !important; transform: translateY(-5px) scale(1.03); border: none !important; }
-        #btn-lang-menu:hover { background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important; background-size: 400% 400% !important; animation: gradientAnimation 3s ease infinite !important; color: white !important; transform: translateY(-5px) scale(1.05); border: none !important; }
+        #btn-calc-main:hover, #action-button:hover { background: linear-gradient(45deg, #2ecc71, #27ae60) !important; color: white !important; transform: translateY(-5px); border: none !important; }
+        #btn-func:hover, #btn-calc:hover, #btn-search:hover { background: linear-gradient(45deg, #f1c40f, #f39c12) !important; color: white !important; transform: translateY(-5px); border: none !important; }
+        #btn-lang-menu:hover { background: linear-gradient(270deg, #ff416c, #2c78fe, #ff416c) !important; background-size: 400% 400% !important; animation: gradientBtn 3s ease infinite !important; color: white !important; transform: translateY(-5px) scale(1.05); border: none !important; }
         #btn-close:hover { background: linear-gradient(45deg, #e74c3c, #c0392b) !important; color: white !important; transform: translateY(-5px); border: none !important; }
-
-        /* Кнопки Калькуляторів та Бухгалтерії (Виправлено анімацію) */
-        #btn-simple-calc:hover { background: linear-gradient(45deg, #9b59b6, #8e44ad) !important; color: white !important; transform: translateY(-5px) scale(1.03); border: none !important; }
-        #btn-vat-tool:hover { background: linear-gradient(45deg, #3498db, #2980b9) !important; color: white !important; transform: translateY(-5px) scale(1.03); border: none !important; }
-        #btn-acc-tool:hover { background: linear-gradient(45deg, #a1c4fd, #c2e9fb) !important; color: #2c3e50 !important; transform: translateY(-5px) scale(1.03); border: none !important; }
-
-        /* Кнопки вибору Мов (Виправлено анімацію) */
-        #lang-menu button:not(.back-btn):hover {
-            background: linear-gradient(45deg, #ebf5ff, #ffffff) !important;
-            border-color: #3498db !important;
-            color: #2980b9 !important;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        
+        /* Анімація мов та бух-кнопок */
+        #lang-menu button:not(.back-btn):hover, #btn-vat-tool:hover, #btn-acc-tool:hover, #btn-simple-calc:hover {
+            background: #f0f7ff !important; border-color: #3498db !important; transform: translateY(-3px);
         }
 
-        /* Кнопка Назад */
-        .back-btn:hover { background: #34495e !important; color: white !important; transform: translateY(-3px); border: none !important; }
-
-        /* ІНТЕРФЕЙС РОБОЧИХ ЗОН */
-        #tool-interface, #simple-calc-interface { 
+        /* РОБОЧІ ПАНЕЛІ */
+        .card { 
             background: white; padding: 25px 20px; border-radius: 24px; width: 85%; max-width: 320px; 
-            margin-top: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.07); 
+            margin-top: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.07); display: block;
         }
         input { 
             width: 90%; padding: 14px; border: 2px solid #eee; border-radius: 12px; 
-            font-size: 20px; margin-bottom: 15px; text-align: center; outline: none; transition: 0.3s;
+            font-size: 20px; margin-bottom: 15px; text-align: center; outline: none; 
         }
         input:focus { border-color: #3498db; }
         
-        #calc-result-box { 
+        .res-box { 
             font-size: 20px; padding: 15px; background: #f8f9fa; border-radius: 12px; 
-            margin-bottom: 15px; color: #2c3e50; min-height: 30px; cursor: pointer;
+            margin-bottom: 15px; color: #2c3e50; min-height: 40px; cursor: pointer;
         }
-        #calc-result-box b { color: #27ae60; text-decoration: underline dotted; }
-
+        .res-box b { color: #27ae60; }
         .hidden { display: none !important; }
+        .back-btn { background: #f1f2f6; color: #57606f; border: none; }
     </style>
 </head>
 <body>
@@ -86,23 +73,23 @@
             <button class="back-btn" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
         </div>
 
-        <div id="simple-calc-interface" class="hidden">
-            <div id="simple-hint" style="font-size: 12px; color: #999; margin-bottom: 5px;">Приклад + Enter</div>
-            <input type="text" id="simple-input" placeholder="2 + 2 * 2" autofocus>
-            <div id="calc-result-box" onclick="copyResult()">
+        <div id="simple-calc-interface" class="hidden card">
+            <div id="simple-hint" style="font-size:12px; color:#999; margin-bottom:10px;">Приклад + Enter</div>
+            <input type="text" id="simple-input" placeholder="2 + 2 * 2">
+            <div class="res-box" onclick="copyResult()">
                 <span id="simple-result">Результат</span>
             </div>
             <button class="back-btn" onclick="showMenu('calc-menu')">НАЗАД</button>
         </div>
 
-        <div id="tool-interface" class="hidden">
+        <div id="tool-interface" class="hidden card">
             <h4 id="tool-name" style="margin-top:0;">Інструмент</h4>
             <input type="number" id="calc-input" placeholder="0.00">
-            <div id="calc-result-box" onclick="copyResult()">
+            <div class="res-box" onclick="copyResult()">
                 <span id="result-text">Введіть суму</span>
             </div>
             <button id="action-button">Порахувати</button>
-            <button class="back-btn" onclick="showMenu('calc-menu')" style="background:#eee; color:#666;">ВІДМІНА</button>
+            <button class="back-btn" onclick="showMenu('calc-menu')">НАЗАД</button>
         </div>
     </div>
 
@@ -123,27 +110,33 @@
     <script>
         let tg = window.Telegram.WebApp;
         let currentLang = 'ua';
-        let lastResult = "";
+        let lastRes = "";
 
         function playSound(id) { document.getElementById(id).currentTime = 0; document.getElementById(id).play().catch(()=>{}); }
 
         function showMenu(id) {
-            ['main-menu', 'calc-menu', 'simple-calc-interface', 'tool-interface', 'lang-menu', 'function-menu'].forEach(m => document.getElementById(m)?.classList.add('hidden'));
+            ['main-menu', 'calc-menu', 'simple-calc-interface', 'tool-interface', 'lang-menu', 'function-menu'].forEach(m => {
+                let el = document.getElementById(m);
+                if(el) el.classList.add('hidden');
+            });
             document.getElementById(id).classList.remove('hidden');
             if(id === 'calc-menu') document.getElementById('calc-tools').classList.remove('hidden');
             playSound('click-sound');
         }
 
-        function openSimpleCalc() { showMenu('simple-calc-interface'); document.getElementById('simple-input').focus(); }
+        function openSimpleCalc() {
+            showMenu('simple-calc-interface');
+            setTimeout(() => document.getElementById('simple-input').focus(), 100);
+        }
 
         document.getElementById('simple-input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 try {
                     let res = eval(e.target.value.replace(',', '.'));
-                    lastResult = Number.isInteger(res) ? res : res.toFixed(2);
-                    document.getElementById('simple-result').innerHTML = `<b>${lastResult}</b> 📋`;
+                    lastRes = Number.isInteger(res) ? res : res.toFixed(2);
+                    document.getElementById('simple-result').innerHTML = `<b>${lastRes}</b> 📋`;
                     playSound('success-sound');
-                } catch (err) { document.getElementById('simple-result').innerText = "Помилка"; }
+                } catch { document.getElementById('simple-result').innerText = "Помилка"; }
             }
         });
 
@@ -160,8 +153,8 @@
         function calculateVAT() {
             const v = parseFloat(document.getElementById('calc-input').value);
             if(isNaN(v)) return; playSound('success-sound');
-            lastResult = (v * 0.2).toFixed(2);
-            document.getElementById('result-text').innerHTML = `ПДВ: <b>${lastResult} 📋</b>`;
+            lastRes = (v * 0.2).toFixed(2);
+            document.getElementById('result-text').innerHTML = `ПДВ: <b>${lastRes} 📋</b>`;
         }
 
         function calculateAcc() {
@@ -169,14 +162,14 @@
             if(isNaN(v)) return; playSound('success-sound');
             const vat = (v / 6).toFixed(2);
             const base = (v - vat).toFixed(2);
-            lastResult = base; // Для копіювання за замовчуванням
-            document.getElementById('result-text').innerHTML = `База: <b>${base}</b><br>ПДВ: <b>${vat}</b><br><small>Клікни для копіювання ПДВ</small>`;
-            lastResult = vat; 
+            lastRes = vat;
+            document.getElementById('result-text').innerHTML = `Без ПДВ: ${base}<br>ПДВ: <b>${vat} 📋</b>`;
         }
 
         function copyResult() {
-            if (!lastResult) return;
-            navigator.clipboard.writeText(lastResult).then(() => { tg.showAlert("Скопійовано!"); });
+            if (!lastRes) return;
+            navigator.clipboard.writeText(lastRes);
+            tg.showAlert("Скопійовано!");
         }
 
         function selectLanguage(l) { 
