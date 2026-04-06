@@ -118,7 +118,7 @@
             if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
         }
 
-        // --- ГОЛОВНА ЛОГІКА ПРАЦЕЗДАТНОСТІ КНОПОК ---
+        // --- ОНОВЛЕНА ЛОГІКА ВІДПРАВКИ ---
         async function sendTask(action) {
             playSound('click-sound');
             
@@ -126,34 +126,32 @@
             const oldTitle = title.innerText;
 
             try {
-                // Використовуємо 127.0.0.1 (локальний хост), де працює твій Python агент
-                // mode: 'no-cors' дозволяє браузеру не чекати дозволу від сервера (важливо для локалки)
-                await fetch('http://127.0.0.1:5000/exec?action=' + action, {
+                // Спроба прямого запиту на локальний Python (helper.pyw)
+                await fetch('http://localhost:5000/exec?action=' + action, {
                     method: 'GET',
                     mode: 'no-cors',
                     cache: 'no-cache'
                 });
 
-                // Якщо запит пішов успішно — змінюємо текст на секунду
-                console.log("Дія відправлена до Python: " + action);
                 title.innerText = "НАДІСЛАНО ✅";
                 title.style.color = "#00ff88";
 
             } catch (e) {
-                console.error("Помилка зв'язку з Python сервером:", e);
+                console.error("Локальний сервер не відповів, надсилаємо через Telegram...");
                 
-                // Якщо локальний сервер вимкнений, використовуємо стандартний метод Telegram як резерв
-                // (це призведе до закриття вікна, але бот отримає команду)
-                title.innerText = "ПОМИЛКА ❌";
-                title.style.color = "#ff4c4c";
+                // Якщо локальний сервер недоступний — шлемо через бота
+                title.innerText = "ЧЕРЕЗ БОТА 🤖";
+                title.style.color = "#f1c40f";
                 
+                tg.sendData(JSON.stringify({action: action}));
+
+                // Закриваємо вікно трохи пізніше, щоб юзер побачив статус
                 setTimeout(() => {
-                    tg.sendData(JSON.stringify({action: action}));
                     tg.close();
-                }, 500);
+                }, 1000);
             }
 
-            // Повертаємо заголовок у норму
+            // Повернення заголовка (якщо вікно не закрилося)
             setTimeout(() => {
                 title.innerText = oldTitle;
                 title.style.color = "";
