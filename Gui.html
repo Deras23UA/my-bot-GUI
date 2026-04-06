@@ -1,69 +1,41 @@
 import telebot
 import json
-import threading
-import time
 from telebot import types
 
-# 1. Твій токен
+# Твій токен
 TOKEN = '8640349178:AAFnf9a5Evsyy00vnuL5Yld7zwSg5clmdIo'
 bot = telebot.TeleBot(TOKEN)
-
-# 2. Твій Telegram ID (Бот надсилатиме результати саме сюди)
-YOUR_USER_ID = 8708532759
 
 # --- ФУНКЦІЇ ДЛЯ РОБОТИ З JSON ---
 
 def load_data():
-    """Завантажує дані з файлу"""
     try:
         with open('users.json', 'r', encoding='utf-8') as f:
             return json.load(f)
     except:
+        # Якщо файлу немає, створюємо базову структуру
         return {"pending_action": None, "last_result": None}
 
 def save_data(data):
-    """Зберігає дані у файл"""
-    try:
-        with open('users.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Помилка запису у файл: {e}")
+    with open('users.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
 def set_agent_command(command):
-    """Записує нову команду для агента на ПК"""
-    data = load_data()
-    data["pending_action"] = command
-    data["last_result"] = None  # Очищаємо старий результат
-    save_data(data)
-
-# --- ФОНОВА ПЕРЕВІРКА РЕЗУЛЬТАТІВ ---
-
-def check_for_results():
-    """Стежить за файлом і надсилає відповіді від ПК"""
-    while True:
-        try:
-            data = load_data()
-            if data.get("last_result"):
-                result_text = data["last_result"]
-                bot.send_message(YOUR_USER_ID, f"📢 Відповідь від BAS:\n\n{result_text}")
-                
-                # Очищаємо результат, щоб не надсилати двічі
-                data["last_result"] = None
-                save_data(data)
-        except Exception as e:
-            print(f"Помилка фонової перевірки: {e}")
-        
-        time.sleep(1) # Перевірка кожну секунду
+    try:
+        with open('users.json', 'r+', encoding='utf-8') as f:
+            data = json.load(f)
+            data["pending_action"] = command
+            f.seek(0)
+            json.dump(data, f, ensure_ascii=False, indent=4)
+            f.truncate()
+    except Exception as e:
+        print(f"Помилка JSON: {e}")
 
 # --- ОБРОБНИКИ КОМАНД ---
 
 @bot.message_handler(commands=['start'])
 def welcome(message):
-    bot.reply_to(message, f"Вітаю! Твій ID: {message.from_user.id}\nНапиши 'меню', щоб відкрити панель.")
-
-@bot.message_handler(commands=['myid'])
-def my_id(message):
-    bot.reply_to(message, f"Твій ID: {message.from_user.id}")
+    bot.reply_to(message, f"Вітаю! Я Deras Helper. Напиши 'меню', щоб відкрити інструменти.")
 
 @bot.message_handler(func=lambda m: m.text.lower() == "меню")
 def show_menu(message):
@@ -76,21 +48,16 @@ def show_menu(message):
 
 @bot.message_handler(content_types=['web_app_data'])
 def get_web_app_data(message):
-    """Обробляє натискання кнопок у WebApp (якщо fetch не спрацював)"""
     try:
         web_data = json.loads(message.web_app_data.data)
         action = web_data.get('action')
         if action:
             set_agent_command(action)
-            bot.send_message(message.chat.id, f"⌛ Запит '{action}' надіслано на ПК. Очікуйте відповідь...")
+            bot.send_message(message.chat.id, f"✅ Команду '{action}' передано на ПК.")
     except Exception as e:
-        bot.send_message(message.chat.id, f"Помилка кнопки: {e}")
+        bot.send_message(message.chat.id, f"Помилка: {e}")
 
 # --- ГОЛОВНИЙ ЗАПУСК ---
-
 if __name__ == '__main__':
-    # Запускаємо фонову перевірку в окремому потоці
-    threading.Thread(target=check_for_results, daemon=True).start()
-    
-    print("Бот запущений і стежить за файлом users.json...")
+    print("Бот запущений...")
     bot.polling(none_stop=True)
