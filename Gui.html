@@ -8,14 +8,13 @@ from telebot import types
 TOKEN = '8640349178:AAFnf9a5Evsyy00vnuL5Yld7zwSg5clmdIo'
 bot = telebot.TeleBot(TOKEN)
 
-# 2. Твій Telegram ID
-# Бот надсилатиме результати з ПК саме на цей ID
+# 2. Твій Telegram ID (Встав сюди свій ID, щоб бот знав куди слати результат)
+# Якщо не знаєш його, запусти бота і напиши /myid
 YOUR_USER_ID = 8708532759 
 
 # --- ФУНКЦІЇ ДЛЯ РОБОТИ З JSON ---
 
 def load_data():
-    """Завантажує дані з файлу"""
     try:
         with open('users.json', 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -23,17 +22,13 @@ def load_data():
         return {"pending_action": None, "last_result": None}
 
 def save_data(data):
-    """Зберігає дані у файл"""
     with open('users.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 def set_agent_command(command):
-    """Записує нову команду для агента на ПК"""
     try:
         data = load_data()
         data["pending_action"] = command
-        # Очищаємо старий результат перед новою командою
-        data["last_result"] = None 
         save_data(data)
     except Exception as e:
         print(f"Помилка запису команди: {e}")
@@ -41,27 +36,26 @@ def set_agent_command(command):
 # --- ФОНОВА ПЕРЕВІРКА РЕЗУЛЬТАТІВ ---
 
 def check_for_results():
-    """Ця функція постійно стежить за файлом і надсилає відповіді від ПК"""
+    """Ця функція працює окремо і чекає, поки в JSON з'явиться відповідь від ПК"""
     while True:
         try:
             data = load_data()
             
-            # Якщо в файлі з'явився результат від агента (helper.pyw)
+            # Якщо в файлі з'явився результат від агента
             if data.get("last_result"):
                 result_text = data["last_result"]
                 
                 # Надсилаємо результат у чат
                 bot.send_message(YOUR_USER_ID, f"📢 Відповідь від BAS:\n\n{result_text}")
                 
-                # Очищаємо, щоб не надсилати одне й те саме повідомлення
+                # Очищаємо, щоб не надсилати одне й те саме
                 data["last_result"] = None
                 save_data(data)
                 
         except Exception as e:
             print(f"Помилка фонової перевірки: {e}")
         
-        # Перевірка кожну 1 секунду для швидкості
-        time.sleep(1) 
+        time.sleep(2) # Перевірка кожні 2 секунди
 
 # --- ОБРОБНИКИ КОМАНД ---
 
@@ -84,7 +78,24 @@ def show_menu(message):
 
 @bot.message_handler(content_types=['web_app_data'])
 def get_web_app_data(message):
-    """Обробляє натискання кнопок у WebApp"""
+    try:
+        web_data = json.loads(message.web_app_data.data)
+        action = web_data.get('action')
+        if action:
+            set_agent_command(action)
+            bot.send_message(message.chat.id, f"✅ Команду '{action}' передано на ПК. Очікуйте результат...")
+    except Exception as e:
+        bot.send_message(message.chat.id, f"Помилка WebApp: {e}")
+
+# --- ГОЛОВНИЙ ЗАПУСК ---
+if __name__ == '__main__':
+    # Запускаємо фонову перевірку в окремому потоці
+    threading.Thread(target=check_for_results, daemon=True).start()
+    
+    print("Бот запущений і стежить за файлом users.json...")
+    bot.polling(none_stop=True)
+    @bot.message_handler(content_types=['web_app_data'])
+def get_web_app_data(message):
     try:
         # Отримуємо дані з твоєї HTML-сторінки
         web_data = json.loads(message.web_app_data.data)
@@ -95,17 +106,7 @@ def get_web_app_data(message):
             set_agent_command(action)
             
             # Відразу кажемо користувачу, що процес пішов
-            bot.send_message(message.chat.id, f"⏳ Запит '{action}' надіслано на ПК. Очікуйте відповідь...")
+            bot.send_message(message.chat.id, "⏳ Обробка запиту на ПК...")
             
     except Exception as e:
         bot.send_message(message.chat.id, f"Помилка кнопки: {e}")
-
-# --- ГОЛОВНИЙ ЗАПУСК ---
-
-if __name__ == '__main__':
-    # Запускаємо фонову перевірку результатів у окремому потоці
-    threading.Thread(target=check_for_results, daemon=True).start()
-    
-    print("Бот запущений і стежить за файлом users.json...")
-    # Постійне опитування серверів Telegram
-    bot.polling(none_stop=True)
