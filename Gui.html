@@ -1,63 +1,164 @@
-import telebot
-import json
-from telebot import types
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Deras Helper GUI v1.0</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* ТЕМНІ СТИЛІ */
+        body { 
+            background: #0f0f13; color: #ffffff; text-align: center; 
+            font-family: 'Segoe UI', Roboto, sans-serif; padding-top: 30px; 
+            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        }
 
-# Твій токен
-TOKEN = '8640349178:AAFnf9a5Evsyy00vnuL5Yld7zwSg5clmdIo'
-bot = telebot.TeleBot(TOKEN)
+        h2 { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.5); margin-bottom: 25px; font-size: 26px; transition: all 0.3s; }
 
-# --- ФУНКЦІЇ ДЛЯ РОБОТИ З JSON ---
+        .btn-container { width: 95%; max-width: 450px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
-def load_data():
-    try:
-        with open('users.json', 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except:
-        # Якщо файлу немає, створюємо базову структуру
-        return {"pending_action": None, "last_result": None}
+        .menu-btn { 
+            position: relative; background: #1e1e26; color: white; border: 1px solid #333; 
+            padding: 22px 20px; border-radius: 18px; font-size: 18px; font-weight: bold; 
+            cursor: pointer; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+            transition: all 0.4s ease; text-transform: uppercase; letter-spacing: 1px; 
+            display: flex; justify-content: center; align-items: center; overflow: hidden; z-index: 1;
+        }
 
-def save_data(data):
-    with open('users.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+        .menu-btn::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1;
+        }
 
-def set_agent_command(command):
-    try:
-        with open('users.json', 'r+', encoding='utf-8') as f:
-            data = json.load(f)
-            data["pending_action"] = command
-            f.seek(0)
-            json.dump(data, f, ensure_ascii=False, indent=4)
-            f.truncate()
-    except Exception as e:
-        print(f"Помилка JSON: {e}")
+        .menu-btn:hover::before { width: 100%; }
+        .menu-btn:hover { color: #000; border-color: transparent; transform: translateY(-3px); }
+        .menu-btn:active { transform: scale(0.98); }
 
-# --- ОБРОБНИКИ КОМАНД ---
+        #btn-calc-main::before { background: #2ecc71; } 
+        #btn-func::before { background: #f1c40f; }      
+        #btn-lang-menu::before { background: #3498db; } 
+        #btn-close::before { background: #e74c3c; }     
 
-@bot.message_handler(commands=['start'])
-def welcome(message):
-    bot.reply_to(message, f"Вітаю! Я Deras Helper. Напиши 'меню', щоб відкрити інструменти.")
+        .sub-fin::before { background: #2ecc71; }
+        .sub-func::before { background: #f1c40f; }
 
-@bot.message_handler(func=lambda m: m.text.lower() == "меню")
-def show_menu(message):
-    markup = types.InlineKeyboardMarkup()
-    # Твоє посилання на GUI
-    web_app = types.WebAppInfo(url="https://deras23ua.github.io/my-bot-GUI/Gui.html")
-    button = types.InlineKeyboardButton(text="Відкрити Помічник 🚀", web_app=web_app)
-    markup.add(button)
-    bot.send_message(message.chat.id, "Панель керування BAS:", reply_markup=markup)
+        .back-btn-style {
+            background: #24272e !important; border: 1px solid #40444b !important;
+            color: #8e9297 !important; margin-top: 15px !important; font-size: 15px !important; padding: 15px !important;
+        }
+        .back-btn-style::before { display: none; }
 
-@bot.message_handler(content_types=['web_app_data'])
-def get_web_app_data(message):
-    try:
-        web_data = json.loads(message.web_app_data.data)
-        action = web_data.get('action')
-        if action:
-            set_agent_command(action)
-            bot.send_message(message.chat.id, f"✅ Команду '{action}' передано на ПК.")
-    except Exception as e:
-        bot.send_message(message.chat.id, f"Помилка: {e}")
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <h2 id="ui-title">DERAS HELPER v1.0</h2>
+    
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
 
-# --- ГОЛОВНИЙ ЗАПУСК ---
-if __name__ == '__main__':
-    print("Бот запущений...")
-    bot.polling(none_stop=True)
+    <div id="main-menu" class="btn-container">
+        <button class="menu-btn" id="btn-calc-main" onclick="showMenu('calc-menu')">ФІНАНСИ 💸</button>
+        <button class="menu-btn" id="btn-func" onclick="showMenu('function-menu')">Функції BAS 🛠️</button>
+        <button class="menu-btn" id="btn-lang-menu" onclick="showMenu('lang-menu')">МОВА 🌍</button>
+        <button class="menu-btn" id="btn-close" onclick="tg.close()">Закрити ❌</button>
+    </div>
+
+    <div id="calc-menu" class="hidden btn-container">
+        <button class="menu-btn sub-fin" onclick="sendTask('quick_calc')">Швидкий розрахунок 🔢</button>
+        <button class="menu-btn sub-fin" onclick="sendTask('vat_20')">Розрахунок ПДВ (20%) 💰</button>
+        <button class="menu-btn sub-fin" onclick="sendTask('accounting_vat')">Бухгалтерія (ПДВ) 📑</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
+    <div id="function-menu" class="hidden btn-container">
+        <button class="menu-btn sub-func" onclick="sendTask('calculate_metrics')">Рахувати показники 📊</button>
+        <button class="menu-btn sub-func" onclick="sendTask('search_issues')">Шукати проблеми 🔍</button>
+        <button class="menu-btn" id="btn-stop-all" style="border-left: 6px solid #e74c3c;" onclick="sendTask('stop_all')">ЗУПИНИТИ ВСЕ 🛑</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
+    <div id="lang-menu" class="hidden btn-container">
+        <button class="menu-btn" onclick="selectLanguage('ua')">Українська 🇺🇦</button>
+        <button class="menu-btn" onclick="selectLanguage('en')">English 🇺🇸</button>
+        <button class="menu-btn" onclick="selectLanguage('pl')">Polski 🇵🇱</button>
+        <button class="menu-btn" onclick="selectLanguage('de')">Deutsch 🇩🇪</button>
+        <button class="menu-btn back-btn-style" onclick="showMenu('main-menu')">НАЗАД ⬅️</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const translations = {
+            ua: { title: "DERAS HELPER v1.0", calc: "ФІНАНСИ 💸", func: "Функції BAS 🛠️", lang: "МОВА 🌍", close: "Закрити ❌", back: "НАЗАД ⬅️" },
+            en: { title: "DERAS HELPER v1.0", calc: "FINANCE 💸", func: "BAS FUNCTIONS 🛠️", lang: "LANGUAGE 🌍", close: "Close ❌", back: "BACK ⬅️" },
+            pl: { title: "DERAS HELPER v1.0", calc: "FINANSE 💸", func: "FUNKCJE BAS 🛠️", lang: "JĘZYK 🌍", close: "Zamknij ❌", back: "POWRÓT ⬅️" },
+            de: { title: "DERAS HELPER v1.0", calc: "FINANZEN 💸", func: "BAS FUNKTIONEN 🛠️", lang: "SPRACHE 🌍", close: "Schließen ❌", back: "ZURÜCK ⬅️" }
+        };
+
+        function selectLanguage(lang) {
+            const t = translations[lang] || translations.ua;
+            document.getElementById('ui-title').innerText = t.title;
+            document.getElementById('btn-calc-main').innerText = t.calc;
+            document.getElementById('btn-func').innerText = t.func;
+            document.getElementById('btn-lang-menu').innerText = t.lang;
+            document.getElementById('btn-close').innerText = t.close;
+            document.querySelectorAll('.back-btn-style').forEach(btn => btn.innerText = t.back);
+            showMenu('main-menu');
+        }
+
+        function showMenu(id) {
+            document.querySelectorAll('body > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            playSound('click-sound');
+        }
+
+        function playSound(id) { 
+            let s = document.getElementById(id);
+            if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
+        }
+
+        // --- ГОЛОВНА ЛОГІКА ПРАЦЕЗДАТНОСТІ КНОПОК ---
+        async function sendTask(action) {
+            playSound('click-sound');
+            
+            const title = document.getElementById('ui-title');
+            const oldTitle = title.innerText;
+
+            try {
+                // Використовуємо 127.0.0.1 (локальний хост), де працює твій Python агент
+                // mode: 'no-cors' дозволяє браузеру не чекати дозволу від сервера (важливо для локалки)
+                await fetch('http://127.0.0.1:5000/exec?action=' + action, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                });
+
+                // Якщо запит пішов успішно — змінюємо текст на секунду
+                console.log("Дія відправлена до Python: " + action);
+                title.innerText = "НАДІСЛАНО ✅";
+                title.style.color = "#00ff88";
+
+            } catch (e) {
+                console.error("Помилка зв'язку з Python сервером:", e);
+                
+                // Якщо локальний сервер вимкнений, використовуємо стандартний метод Telegram як резерв
+                // (це призведе до закриття вікна, але бот отримає команду)
+                title.innerText = "ПОМИЛКА ❌";
+                title.style.color = "#ff4c4c";
+                
+                setTimeout(() => {
+                    tg.sendData(JSON.stringify({action: action}));
+                    tg.close();
+                }, 500);
+            }
+
+            // Повертаємо заголовок у норму
+            setTimeout(() => {
+                title.innerText = oldTitle;
+                title.style.color = "";
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
